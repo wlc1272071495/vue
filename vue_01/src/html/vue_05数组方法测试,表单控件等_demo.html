@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+</head>
+
+<body>
+    <div id="example-1">
+        <div v-for="(item,index) in items" @click="say($event,item,index)">
+            <a>
+                {{index}}----{{item.message}}
+            </a>
+        </div>
+        <div>
+            {{sortSec}}
+        </div>
+
+        <h2>表单控件绑定</h2>
+        <!-- 当选中时，`checkedNames` 为字符串 "Jack,John,Mike" -->
+        <p>多选按钮</p>
+        <input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+        <label for="jack">Jack</label>
+        <input type="checkbox" id="john" value="John" v-model="checkedNames">
+        <label for="john">John</label>
+        <input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+        <label for="mike">Mike</label>
+        <br>
+        <span>Checked names: {{ checkedNames }}</span>
+
+        <!-- 当选中时，`checkedNames` 为字符串 "One" -->
+        <p>单选按钮</p>
+        <input type="radio" id="one" value="One" v-model="picked">
+        <label for="one">One</label>
+        <br>
+        <input type="radio" id="two" value="Two" v-model="picked">
+        <label for="two">Two</label>
+        <br>
+        <span>Picked: {{ picked }}</span>
+
+        <!-- 当选中时，`selected` 为字符串 "abc" -->
+        <p>单选按钮</p>
+        <select v-model="select">
+            <option v-for="option in options">{{option.name}}</option>
+        </select>
+        <span>selected:{{select}}</span>
+
+        <p>单选按钮</p>
+        <input type="checkbox" v-model="toggle" @click="console(toggle)" v-bind:true-value="true" v-bind:false-value="false">
+        <span>toggle:{{toggle}}</span>
+
+
+
+        <h2>表单修饰符</h2>
+        <dl>
+            <dt>.lazy</dt>
+            <dd> 在默认情况下， v-model 在 input 事件中同步输入框的值与数据，但你可以添加一个修饰符 lazy ，从而转变为在 change 事件中同步：</dd>
+        </dl>
+        <input type="text" v-model.lazy="msg">
+        <span>msg:{{msg}}</span>
+
+        <dl>
+            <dt>.number</dt>
+            <dd> 如果想自动将用户的输入值转为 Number 类型（如果原值的转换结果为 NaN 则返回原值），可以添加一个修饰符 number 给 v-model 来处理输入值：</dd>
+        </dl>
+        <input type="text" v-model.number="msgNum">
+        <span>msgNum:{{msgNum}}</span>
+        <dl>
+            <dt> .trim</dt>
+            <dd>如果要自动过滤用户输入的首尾空格，可以添加 trim 修饰符到 v-model 上过滤输入：</dd>
+        </dl>
+        <input type="text" v-model.number="msgNum">
+        <span>msgNum:{{msgNum}}</span>
+    </div>
+</body>
+<script>
+    var example1 = new Vue({
+        el: '#example-1',
+        data: {
+            items: [{
+                message: 'foo'
+            }, {
+                message: 'Bar'
+            }],
+            sortArr: [5, 1, 4, 2, 3, 6, 9, 7, 0, 8],
+            checkedNames: [],
+            picked: [],
+            options: [{
+                name: "wwww",
+                age: 18
+            }, {
+                name: "llll",
+                age: 19
+            }, {
+                name: "cccc",
+                age: 18
+            }],
+            select: "wwww",
+            toggle: false,
+            // a: "aaaaaaa",
+            // b: "bbbbbbb",
+            msg: "",
+            msgNum: ""
+        },
+        computed: {
+            sortSec() {
+                return this.sortArr.sort(function(a, b) {
+                    return a - b;
+                })
+            }
+
+        },
+        methods: {
+            say(event, item, index) {
+                console.log(event);
+                console.log(event.currentTarget);
+                console.log(event.target);
+                console.log(item, index);
+            },
+            console(value) {
+                console.log(value)
+            }
+        }
+    });
+    // example1.items = example1.items.filter(function (item) {
+    //     return item.message.match(/Foo/)
+    // })
+</script>
+
+</html>

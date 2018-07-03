@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue入门</title>
+    <script src="../libs/js/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h2>{{message}}</h2>
+        <button @click = "reverse">点击反转</button><br/>
+        <span  v-on:click="clickMe">点我，点我001</span>
+        <span  @click="clickMe">点我，点我002</span><br/ >
+        
+        <input type="text" v-model="txt" placeholder="txt"  >
+        <span>{{txt}}</span>
+    </div>
+</body>
+<script>
+    
+     console.log(Vue)
+ /*   
+    v-on:    绑定事件监听器
+    v-on：click (简写  @click)  绑定点击事件
+    v-on：touchstart  (简写 @touchstart)   绑定手势触发事件
+
+
+    v-model  实现表单输入和应用状态之间的双向绑定（mvvm）
+    data-banding
+    v-model 实现数据双向绑定   
+    1.修改view更新model  
+    2.修改model更新view
+      通过v-model指令 把dom元素（view） 和数据模型绑定到一起，当用户修改view，就会触发dom listen，
+      就去跟新model的数值，当你修改lemodel，就会通过data-banding 函数去更新view，这就是基础的数据双向绑定
+      
+*/
+
+    var vm = new Vue({
+        el:"#app",   //页面真实的dom对象
+        data:{       //存储数据的 model 被 dom使用对象
+            message:"Vue 事件绑定",
+            hello:"how are you",
+            txt:"Vue"
+        }, 
+        methods:{   //vue 所有方法绑定到methods中
+            clickMe(){
+                console.log("我被点击了！")
+            },
+            reverse(){
+                this.message = this.message.split("").reverse().join("");
+            }
+        }
+    })
+</script>
+</html>

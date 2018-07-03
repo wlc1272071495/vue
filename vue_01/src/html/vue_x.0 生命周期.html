@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">{{count}}</div>
+    <div id="example-1"></div>
+</body>
+<script>
+    var data = {
+        name: "www",
+        detail: "test"
+    }
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            count: 0,
+            dataList: []
+        },
+        methods: {
+            add() {
+                this.count++;
+            }
+        },
+        beforeCreate() { //组件初始化init之前，此时data，method都不会加载
+            // console.log("组件创建之前------------------");
+            // console.log(this.count);
+            // console.log(this.add);
+            // console.log(this.dataList);
+            // console.log(this);
+            // console.log(this == vm);
+            // this.dataList = [1, 2, 3, 4]
+
+        },
+        created() { //组件构造器写入，data，methods等
+            // console.log("组件创建之后------------------");
+            // console.log(this.count);
+            // console.log(this.add);
+            // console.log(this.dataList);
+            // console.log(this);
+            // console.log(this == vm);
+            // this.dataList = [1, 2, 3, 4]
+        },
+        beforeMount() {
+            console.log("组件加载之前------------------");
+            console.log(this.count);
+            console.log(this.add);
+            console.log(this.dataList);
+            console.log(this);
+            console.log(this == vm);
+
+        },
+        mounted() {
+            // console.log("组件加载之后------------------");
+            // console.log(this.count);
+            // console.log(this.add);
+            // console.log(this.dataList);
+            // console.log(this);
+            // console.log(this == vm);
+
+        },
+        beforeUpdate() {
+            // console.log("组件更新之前------------------");
+            // console.log(this.count);
+            // console.log(this.add);
+            // console.log(this.dataList);
+            // console.log(this);
+            // console.log(this == vm);
+        },
+        updated() {
+            // console.log("组件更新之后------------------");
+            // console.log(this.count);
+            // console.log(this.add);
+            // console.log(this.dataList);
+            // console.log(this);
+            // console.log(this == vm);
+        }
+    })
+</script>
+
+</html>
