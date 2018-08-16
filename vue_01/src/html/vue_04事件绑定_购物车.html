@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue入门</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        table {
+            width: 600px;
+            border: 1px solid #ccc;
+            border-collapse: collapse;
+            text-align: center;
+        }
+        
+        table td,
+        table th {
+            border: 1px solid #ccc;
+        }
+        
+        thead>tr {
+            height: 40px;
+        }
+        
+        tbody>tr {
+            height: 60px;
+        }
+        
+        table input[type=Number] {
+            width: 40px;
+        }
+        
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+    </style>
+    <script src="../libs/js/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <h2>{{message}}</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        <input :checked="checkAll" v-model="checkAll" @click="checkall" :true-value="true" :false-value="false" class="check-all" type="checkbox" name="" id="">
+                    </th>
+                    <th>商品详情</th>
+                    <th>商品单价</th>
+                    <th>商品数量</th>
+                    <th>商品小计</th>
+                    <th>删除</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(goods,index) in dataList" :key='index'>
+                    <td>
+                        <!-- v-model="checkOne" :value="index"  checked="checkOne.indexOf(index)>0" @click="check(index)"-->
+                        <input :checked="checkAll||checkOne.indexOf(goods.id)>=0" @click="check(goods.id)" class="check-one" type="checkbox" name="" id="">
+                    </td>
+                    <td>
+                        <p>{{goods.goodsName}}</p>
+                    </td>
+                    <td>{{goods.goodsPrice}}</td>
+                    <td>
+                        <button @click='dec(index)'>-</button>
+                        <input @blur="judegNum(index)" :value="goods.goodsNum" type="Number">
+                        <button @click='add(index)'>+</button>
+                    </td>
+                    <td>￥{{smallCount(index)}}</td>
+                    <td>
+                        <span @click="del(index)"> 删除</span>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr align="left">
+                    <td>
+                        <input :checked="checkAll" v-model="checkAll" @click="checkall" :true-value="true" :false-value="false" class="check-all" type="checkbox" name="" id="">
+                    </td>
+                    <td>删除</td>
+                    <td></td>
+                    <td>商品{{allNum()}}</td>
+                    <td>总计{{allAccount()}}</td>
+                    <td align="center">结算</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</body>
+<script>
+    console.log(Vue)
+        /*   
+    v-on:    绑定事件监听器
+    v-on：click (简写  @click)  绑定点击事件
+    v-on：touchstart  (简写 @touchstart)   绑定手势触发事件
+
+
+    v-model  实现表单输入和应用状态之间的双向绑定（mvvm）
+    data-banding
+    v-model 实现数据双向绑定   
+    1.修改view更新model  
+    2.修改model更新view
+      通过v-model指令 把dom元素（view） 和数据模型绑定到一起，当用户修改view，就会触发dom listen，
+      就去跟新model的数值，当你修改lemodel，就会通过data-banding 函数去更新view，这就是基础的数据双向绑定
+      
+*/
+
+    var vm = new Vue({
+        el: "#app", //页面真实的dom对象
+        data: { //存储数据的 model 被 dom使用对象
+            message: "Vue 购物车",
+            dataList: [{
+                id: "A001",
+                goodsName: "一加耳机",
+                goodsPrice: 199,
+                goodsNum: 1
+            }, {
+                id: "A002",
+                goodsName: "一加手机壳",
+                goodsPrice: 99,
+                goodsNum: 1
+            }, {
+                id: "A003",
+                goodsName: "一加6 手机",
+                goodsPrice: 3599,
+                goodsNum: 1
+            }],
+            checkAll: false,
+            checkOne: []
+        },
+        methods: { //vue 所有方法绑定到methods中
+            judegNum(index) {
+                console.log(event.target.value)
+                if (event.target.value <= 0) {
+                    event.target.value = 1
+                    this.dataList[index].goodsNum = 1
+                } else {
+                    this.dataList[index].goodsNum = event.target.value
+                }
+            },
+            add(index) {
+                console.log(index)
+                this.dataList[index].goodsNum++;
+                // this.smallCount(index);
+                // this.allNum();
+                // this.allAccount();
+            },
+            dec(index) {
+                if (this.dataList[index].goodsNum > 1) {
+                    this.dataList[index].goodsNum--
+                }
+                // this.smallCount(index);
+                // this.allNum();
+                // this.allAccount();
+            },
+            del(index) {
+                this.dataList.splice(index, 1);
+                if (this.checkOne.indexOf(index) != -1) {
+                    var deIndex = this.checkOne.indexOf(index);
+                    this.checkOne.splice(deIndex, 1);
+                }
+                // this.allNum();
+                // this.allAccount();
+            },
+            smallCount(index) {
+                var goods = this.dataList[index];
+                return goods.goodsNum * goods.goodsPrice;
+            },
+            allNum() {
+                var num = 0;
+                for (let i = 0; i < this.dataList.length; i++) {
+                    var id = this.dataList[i].id;
+                    if (this.checkOne.indexOf(id) != -1) {
+                        num += this.dataList[i].goodsNum;
+
+                    }
+                }
+                return num;
+            },
+            allAccount() {
+                var account = 0;
+                for (let i = 0; i < this.dataList.length; i++) {
+                    var id = this.dataList[i].id;
+                    if (this.checkOne.indexOf(id) != -1) {
+
+                        account += this.dataList[i].goodsNum * this.dataList[i].goodsPrice;
+                    }
+                }
+                return account;
+            },
+            checkall() {
+                if (!this.checkAll) {
+                    for (var i = 0; i < this.dataList.length; i++) {
+                        this.checkOne.push(this.dataList[i].id);
+                    }
+                } else {
+                    this.checkOne = [];
+                }
+            },
+            check: function(item) {
+                console.log(item)
+                if (this.checkOne.indexOf(item) == -1) {
+                    this.checkOne.push(item);
+                } else {
+                    var index = this.checkOne.indexOf(item);
+                    this.checkOne.splice(index, 1);
+                }
+                console.log(this.checkOne)
+                if (this.checkOne.length == this.dataList.length) {
+                    this.checkAll = true;
+                } else {
+                    this.checkAll = false;
+                }
+            }
+
+        },
+        computed: {
+
+            total() {
+
+            }
+        },
+        watch: {
+
+        }
+    })
+</script>
+
+</html>

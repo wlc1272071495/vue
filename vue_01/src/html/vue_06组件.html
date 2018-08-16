@@ -11,12 +11,16 @@
 
 <body>
     <div id="example-1">
-        <my-com></my-com>
-        <child></child>
+        <!-- <my-com></my-com>
+        <child></child> -->
         <!-- <my-component></my-component> -->
     </div>
 </body>
 <script>
+    var {
+        component
+    } = Vue;
+
     Vue.component("my-com", {
         template: `
             <div>
@@ -49,6 +53,12 @@
 
     var example1 = new Vue({
         el: '#example-1',
+        template: `
+            <div id='example-1'>
+                <my-com></my-com>
+                <child></child>
+            </div>
+        `,
         data: {},
         computed: {},
         methods: {}

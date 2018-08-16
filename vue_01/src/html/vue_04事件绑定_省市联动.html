@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue入门</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+         ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+    <script src="../libs/js/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <h2>{{message}}</h2>
+        <select size="1" name="" @change="provinceChange($event)" id="">
+            <option value="">省份</option>
+            <option v-for="(item,index) in dataList" :value="item.city_id">{{item.name}}</option>
+        </select>
+        <select size="1" name="" id="" @change="cityChange($event)">
+            <option value="">城市</option>
+            <option v-for="(item,index) in cityList" :value="item.city_id">{{item.name}}</option>
+        </select>
+        <select size="1" name="" id="" v-if="townList.length">
+            <option value="">县镇</option>
+            <option v-for="(item,index) in townList" :value="item.city_id">{{item.name}}</option>
+        </select>
+    </div>
+</body>
+<script>
+    // console.log(Vue)
+    /*   
+    v-on:    绑定事件监听器
+    v-on：click (简写  @click)  绑定点击事件
+    v-on：touchstart  (简写 @touchstart)   绑定手势触发事件
+
+
+    v-model  实现表单输入和应用状态之间的双向绑定（mvvm）
+    data-banding
+    v-model 实现数据双向绑定   
+    1.修改view更新model  
+    2.修改model更新view
+      通过v-model指令 把dom元素（view） 和数据模型绑定到一起，当用户修改view，就会触发dom listen，
+      就去跟新model的数值，当你修改lemodel，就会通过data-banding 函数去更新view，这就是基础的数据双向绑定
+      
+*/
+    // import fetch from "fetch";
+    var vm = new Vue({
+        el: "#app", //页面真实的dom对象
+        data: { //存储数据的 model 被 dom使用对象
+            message: "Vue 省市联动",
+            dataList: [],
+            cityList: [],
+            townList: [],
+        },
+        beforeMount() {
+            // console.dir(fetch)
+            fetch("http://api.yytianqi.com/citylist/id/2").then(res => res.json()).then(data => {
+                console.log(data)
+                this.dataList = data.list;
+            })
+        },
+        methods: { //vue 所有方法绑定到methods中
+            provinceChange(e) {
+                // var ops = e.target.children;
+                // for (var i = 0; i < ops.length; i++) {
+                //     if (ops[i].selected) {
+                //         console.log(ops[i].innerHTML)
+                //     }
+                // }
+                this.cityList = [];
+                this.townList = [];
+                var value = e.target.value;
+                if (value) {
+                    for (var key in this.dataList) {
+                        // console.log(this.dataList[key].city_id == value)
+                        if (this.dataList[key].city_id == value) {
+                            this.cityList = this.dataList[key].list
+                            break;
+                        }
+                    }
+                }
+            },
+            cityChange(e) {
+                var value = e.target.value;
+                console.log(value)
+                if (value) {
+                    for (var key in this.cityList) {
+                        console.log(this.cityList[key].city_id, value)
+                        if (this.cityList[key].city_id == value) {
+                            console.log(this.cityList[key].list)
+                            if (!this.cityList[key].list) {
+                                this.townList = [];
+                            } else {
+                                this.townList = this.cityList[key].list;
+                            }
+
+                            break;
+                        }
+                    }
+                }
+            }
+
+
+        },
+        computed: {
+
+        },
+        watch: {
+
+        }
+    })
+</script>
+
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+</head>
+
+<body>
+    <div id="example-1">
+        <h3>v-for 遍历数组</h3>
+        <div v-for="(pro,index) in dataPro" :key="index">
+            <a href="">{{pro.name}}---{{index}}</a>
+            <ul>
+                <li v-for="(city,idx) in pro.lists" :key="idx">{{city}}---{{idx}}</li>
+            </ul>
+        </div>
+
+        <h3>v-for 遍历对象</h3>
+        <div v-for="(value,key,index) in userInfo">
+            {{key}}----{{value}}----{{index}}
+        </div>
+
+        <h3>vue 数组方法测试</h3>
+        <ul>
+            <li v-for="(value,index) in fruits" :key="index">{{value}}</li>
+        </ul>
+    </div>
+</body>
+<script>
+    // v-for  动态绑定key值作用
+    // 为了给 Vue 一个提示， 以便它能跟踪每个节点的身份， 从而重用和重新排序现有元素， 你需要为每项提供一个唯一 key 属性。 理想的 key 值是每项都有唯一 id。
+
+
+    //   v-for   遍历数组时   (value,index)   value值   index ：下标
+    //   v-for   遍历对象时   (value,key,index)   key：键   value：值  index:下标
+
+
+    // vue 数组的变异方法（变异方法(mutation method)，顾名思义，会改变被这些方法调用的原始数组。）变异方法直接修改原数组  会导致视图改变  更新
+    // push() pop() shift() unshift() splice() sort() reverse()
+    // array.splice(0)  删除数组中所有数据
+
+    // 非变异方法 （这些不会改变原始数组，但总是返回一个新数组。当使用非变异方法时，可以用新数组替换旧数组：）
+    // filter(), concat(), slice()
+
+
+    // 注意：
+    // 由于 JavaScript 的限制， Vue 不能检测以下变动的数组： 当你直接设置一个项的索引时，(测试时可经由控制台测试)
+    // 例如： vm.fruits[indexOfItem] = newValue 当你修改数组的长度时，
+    // 例如： vm.fruits.length =newLength
+
+    // 问题一  解决办法
+    // vm.$set(arr,index,newVakue)  或者 Vue.set(arr,index,newValue)     
+    // 例如 vm.$set(vm.fruits,index,newVakue) ,Vue.set(vm.fruits,index,newVakue) 或者 vm.fruits.splice(index,1,newValue)
+
+    // 问题二   解决办法
+    // vm.fruits.splice(0) splice只传一个数字，代表数组的长度；
+    // vm.$delete(vm.fruits,index) 或者 Vue.delete(vm.fruits,index) 删除下标为index的元素
+
+
+    var dataPro = [{
+        name: "湖北",
+        lists: ["武汉", "襄阳", "仙桃"]
+    }, {
+        name: "湖南",
+        lists: ["长沙", "常德", "岳阳"]
+    }, {
+        name: "北京",
+        lists: ["北京", "海淀", "朝阳"]
+    }]
+    var vm = new Vue({
+        el: '#example-1',
+        data: {
+            dataPro,
+            userInfo: {
+                name: "wwww",
+                age: 18,
+                hobby: "Ani",
+                work: "web"
+            },
+            fruits: ["🍎", "🍍", "🍑"]
+
+        },
+        mounted() {
+            this.fruits.push("🍉"); //变异方法  直接改变视图
+            // this.fruits.splice(0)    //删除数组所有数据
+            this.fruits.concat(["🍇", "荔枝"]); //此处  原数组不改变所以视图不会刷新
+            this.fruits = this.fruits.concat(["葡萄", "荔枝"]); //此处  原数组重定义为新数组所以会改变原来的视图
+            // this.fruits[0] = "🍌";
+            // this.fruits.length = 0;
+
+        }
+    });
+</script>
+
+</html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,18 +8,21 @@
     <title>vue入门</title>
     <script src="../libs/js/vue.js"></script>
 </head>
+
 <body>
     <div id="app">
         <h2>{{message}}</h2>
-        <input type="text" v-model = "hello" >  
-        <span v-bind:title = "hello">{{hello}}</span>  <br/> 
+        <input type="text" v-model="hello">
+        <span v-bind:title="hello">{{hello}}</span>
+        <br/>
         <span v-if="isShow">v-if 加载的span</span>
-        <span v-show="isShow">v-show 加载的span</span><br/>
+        <span v-show="isShow">v-show 加载的span</span>
+        <br/>
         <span v-text="hello">123123</span>
         <div v-html="oHtml">
 
         </div>
-        <input type='text' :value='hello'  />
+        <input type='text' :value='hello' />
 
         <ul>
             <li v-for="(item,index) in todoList" :key='index'>
@@ -26,19 +30,18 @@
             </li>
         </ul>
 
-        <span  v-on:click="clickMe">点我，点我001</span>
-        <span  @click="clickMe">点我，点我002</span>
-        
+        <span v-on:click="clickMe">点我，点我001</span>
+        <span @click="clickMe">点我，点我002</span>
+
     </div>
 </body>
 <script>
-    
-     console.log(Vue)
- /*   
+    console.log(Vue)
+        /*   
     el:"#app",      页面真实的dom对象
     data            model 数据被dom调用
     {{}}            双大括号语法 
-    v-bind （简写实例   :message   ）         只能给dom元素绑定   属性
+    v-bind          (简写实例   :message)         只能给dom元素绑定   属性
     v-if            为true时生成dom 为false时 dom不生成
     v-show          为ture时dom  "display:block" 为fasle "display:none;"
     v-text          为dom添加文本textnode  v-text="message" 类似 {{message}}  不同的是 如果dom中原来存在内容，                 v-text里的内容会会被覆盖原来的内容
@@ -54,24 +57,36 @@
 */
 
     var vm = new Vue({
-        el:"#app",   //页面真实的dom对象
-        data:{       //存储数据的 model 被 dom使用对象
-            message:"hello vue",
-            hello:"how are you",
-            isShow:false,
-            oHtml:`<input type='text' style="background:#6ff" :value="${this.message}" />`,
-            todoList:[
-                {name:"饼干",price:5,num:20},
-                {name:"面包",price:10,num:20},
-                {name:"牛奶",price:7,num:20},
-                {name:"矿泉水",price:2,num:20}
-            ]
+        el: "#app", //页面真实的dom对象
+        data: { //存储数据的 model 被 dom使用对象
+            message: "hello vue",
+            hello: "how are you",
+            isShow: false,
+            oHtml: `<input type='text' style="background:#6ff" :value="${this.message}" />`,
+            todoList: [{
+                name: "饼干",
+                price: 5,
+                num: 20
+            }, {
+                name: "面包",
+                price: 10,
+                num: 20
+            }, {
+                name: "牛奶",
+                price: 7,
+                num: 20
+            }, {
+                name: "矿泉水",
+                price: 2,
+                num: 20
+            }]
         },
-        methods:{
-            clickMe(){
+        methods: {
+            clickMe() {
                 console.log("我被点击了！")
             }
         }
     })
 </script>
+
 </html>

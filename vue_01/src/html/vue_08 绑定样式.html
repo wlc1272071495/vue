@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue入门</title>
+    <script src="../libs/js/vue.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        li {
+            list-style: none;
+        }
+        
+        .static {
+            width: 150px;
+            height: 150px;
+            background: pink;
+        }
+        
+        .a {
+            border: 3px solid #6ff;
+        }
+        
+        .b {
+            border-radius: 10px;
+        }
+        
+        nav {
+            width: 300px;
+            display: flex;
+        }
+        
+        nav li {
+            flex: 1;
+            border: 1px solid;
+            text-align: center;
+            line-height: 25px;
+        }
+        
+        nav .active {
+            background: red;
+        }
+        
+        .wrapBox .sub {
+            width: 300px;
+            height: 300px;
+            border: 1px solid;
+            box-sizing: border-box;
+            display: none;
+            line-height: 300px;
+            text-align: center;
+            background: #6ff;
+        }
+        
+        .wrapBox .show {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h1>{{msg}}</h1>
+        <!-- <div class="static" v-bind:class="isA"></div>
+        <div class="static" v-bind:class="{b:isBActive}"></div>
+        <div class="static" v-bind:class='[" a ","b "]'></div>
+        <div class="static" v-bind:class='[{"a":isActive},"b"]'></div>
+        <div class="static" v-bind:class='[{"a":isActive},{"b":isBActive}]'></div>
+        <div class="static" v-bind:class='[{"a":isActive,"b":isBActive}]'></div>
+
+        <div class="static" v-bind:style='{border:"3px solid #f00"}'></div> -->
+
+        <h2>三栏切换</h2>
+        <nav>
+            <li :class="index==0?'active':''" @click="change(0)">1</li>
+            <li :class="index==1?'active':''" @click="change(1)">2</li>
+            <li :class=" index==2? 'active': '' " @click="change(2)">3</li>
+        </nav>
+        <div class="wrapBox">
+            <div class="sub" :class="index==0?'show':''">1</div>
+            <div class="sub" :class="index==1?'show':''">2</div>
+            <div class="sub" :class="index==2?'show':''">3</div>
+        </div>
+    </div>
+</body>
+<script>
+    // v-bind:class  绑定class
+    // v-bind:style  绑定style
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "style and class",
+            isA: "a",
+            isActive: true,
+            isBActive: true,
+            index: 0
+        },
+        methods: {
+            change(num) {
+                this.index = num;
+            }
+        }
+    })
+</script>
+
+</html>

@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "fetch": "^1.1.0",
     "vue": "^2.5.16"
   },
   "devDependencies": {

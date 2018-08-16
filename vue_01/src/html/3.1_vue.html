@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>计算属性 </title>
+    <script src="../libs/js/vue.js"></script>    
+    
+</head>
+<body>
+    <div id="app">
+        <h2>{{txt}}</h2>
+        <h2>{{msg}}</h2>
+        <h2>翻转msg: {{msg.split('').reverse().join('')}}</h2>
+        <h2>方法翻转 : {{reverseData() }}</h2>
+
+        <div>
+            <h3>计算属性  computed </h3>
+
+            <input type="text" v-model="inp">
+            <h1>{{inp}}</h1>
+            <h1>computed ===> {{reverseInp}}</h1>
+            <h1>methods===> {{mInp()}}</h1>
+        </div>
+
+        <div>
+            <h3>侦听属性  watch</h3>
+            <input type="text" v-model="firstName">
+            <br>
+            <input type="text" v-model="lastName">
+            <h1>{{fullName}}</h1>
+            <h2>{{fName}}</h2>
+            <h2>{{fuName}}</h2>
+        </div>
+
+
+        <h2>
+            {{bigNum}}
+        </h2>
+        <h2>
+            {{smallNum}}
+        </h2>
+        <button @click="bigNum=500">修改bigNum 的值 </button>
+        <button @click="smallNum=300">修改 smallNum 的值 </button>
+
+        <div>
+            <h3>搜索水果</h3>
+            <input type="text" v-model="fruit" >
+            <div>
+                <p v-for="f in myFruit"> {{f}}</p>
+            </div>
+        </div>
+    </div>
+    <!-- 
+        计算属性  computed  依赖vm 里面的数据 data  某个值    处理复杂逻辑  需要用到计算属性  
+
+        观察者   侦听属性   watch    监听某个data的数值  返回newValue  从而去改变某个data的值 
+
+        数据  data
+
+        方法  methods 
+
+
+
+        计算属性  有一定缓存     vs      methods 
+        计算属性是基于它们的依赖进行缓存的    计算属性只有在它的相关依赖发生改变时才会重新求值
+     -->
+    <script>
+        var vm = new Vue({
+            el:"#app",
+            data:{
+                txt:"天道酬勤!",
+                msg:"wh1706 day day up",
+                inp:"",
+                firstName:"Steven",
+                lastName:"Jobs",
+                fullName:"",
+                smallNum:50,
+                fruit:"",
+                newFruit:[],
+                fruits:["apple","bear","orange","Lemon","Banana","Grape","watermelon","pumelo","peach","Mango"]
+            },
+            computed:{
+                reverseInp(){
+                    return this.inp.split('').reverse().join('') + new Date().getSeconds()
+                },
+                fName(){
+                    return this.firstName + "===" + this.lastName 
+                },
+                fuName:{
+                    // getter  就是取值  设置fuName的值 
+                    get(){
+                        return this.firstName + "&&" + this.lastName;
+                    },
+                    // setter   起到侦听作用  只有当前的 fuName 自己主动发生改变的时候才会触发set方法 
+                    set(newValue){
+                        console.log('setset')
+                        console.log(newValue);
+                        var names = newValue.split("&&");
+                        this.firstName = names[0];
+                        this.lastName = names[names.length-1];
+                    }
+                },
+                bigNum:{
+
+                    //  取值  计算属性当前依赖的data的值发生改变才会触发 
+                    get(){
+                        return this.smallNum +  123 ;
+                    },
+                    //  主动修改bigNum 的时候 才会触发  执行
+                    set(newVal){
+                        this.smallNum = newVal ;
+                    }
+                },
+                myFruit:{
+                    get(){
+                        var arr = [];
+                        this.fruits.forEach((item)=>{
+                            if(item.indexOf(this.fruit)!=-1){
+                                arr.push(item)
+                            }
+                        });
+
+                        return arr;
+                    },
+                    set(){
+
+                    }
+                }
+            },
+            methods:{
+                reverseData(){
+                    return this.msg.split('').reverse().join('')
+                },
+                mInp(){
+                    return this.inp.split('').reverse().join('') + + new Date().getSeconds()
+                }
+            },
+            //  侦听属性  监听某个数值改变 然后就进行实例化我们的   swiper  
+            watch:{
+                firstName(newVal,oldVal){
+                    this.fullName =  newVal + "--" +this.lastName;
+                },
+                lastName(newVal,oldVal){
+                    this.fullName =  this.firstName +"--"+newVal;
+                },
+                fruit(newVal,oldVal){
+                    console.log(newVal)
+                    var arr = [];
+                    this.fruits.forEach((item)=>{
+                        if(item.indexOf(newVal)!=-1){
+                            arr.push(item);
+                        }
+                    });
+                    this.newFruit = arr;
+                }
+            },
+
+            created(){
+                this.fullName = this.firstName + "--" + this.lastName;
+            }
+        });
+
+        // 深度侦听  
+        vm.$watch("inp",function(newVal,oldVal){
+            console.log(newVal);
+        })
+    </script>
+</body>
+</html>
