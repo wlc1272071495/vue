@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="sub"></div>
+    </div>
+</body>
+<script>
+    Vue.component("one", {
+        data() {
+            return {
+                msg: "我是组件one"
+            }
+        },
+        template: `
+            <div class='one' >
+                <h3>{{msg}}</h3>
+                <div class="sub" :style="{width:'200px',height:'200px',background:'#6ff',textAlign:'center',lineHeight:'200px'}"></div>
+            </div>
+        `
+    })
+    Vue.component("two", {
+        data() {
+            return {
+                msg: "我是组件two"
+            }
+        },
+        template: `
+            <div class='two'>
+                <h3>{{msg}}</h3>
+                <div class="sub" :style="{width:'200px',height:'200px',background:'#6ff',textAlign:'center',lineHeight:'200px'}"></div>
+            </div>
+            `
+    })
+
+    Vue.component("three", {
+        data() {
+            return {
+                msg: "我是组件three"
+            }
+        },
+        template: `
+        <div class='two'>
+            <h3>{{msg}}</h3>
+            <div class="sub" :style="{width:'200px',height:'200px',background:'#6ff',textAlign:'center',lineHeight:'200px'}"></div>
+        </div>
+        `
+    })
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            select: "one"
+        },
+        template: `   
+            <div id="app">
+                <select v-model="select" name="" id="">
+                    <option value="one">one</option>
+                    <option value="two">two</option>
+                    <option value="three">three</option>
+                </select>
+                <component :is="select"></component>
+            </div>
+        `
+    })
+</script>
+
+
+</html>

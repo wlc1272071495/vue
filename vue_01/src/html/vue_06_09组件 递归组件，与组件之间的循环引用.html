@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        .one {
+            height: 400px;
+        }
+        
+        .two {
+            background: #6ff;
+        }
+    </style>
+    <script src="../libs/js/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <input id="test" type="text">
+    </div>
+</body>
+<script>
+    // 组件递归将会导致“ max stack size exceeded” 错误， 所以请确保递归调用是条件性的
+    Vue.component("one", {
+        name: "oneCom",
+        data() {
+            return {
+                msg: "我是子模块 一",
+                count: 0,
+                date: (new Date()).toLocaleDateString()
+            }
+
+        },
+        template: `
+            <div class="one" v-on="addCount()"  >
+                <h3>{{msg}}---{{count}}--{{date}}</h3>
+                <input ref='input' /> 
+                <button>销毁</button>
+                <div>
+                </div>
+            </div>
+        `,
+        // <keep-alive>
+        //     <oneCom v-if="count<4"></oneCom>
+        // </keep-alive>
+        methods: {
+            addCount() {
+                console.log(this.$root.count)
+                this.count += 1;
+            },
+            test() {
+                console.log(this.$refs)
+            }
+        },
+
+
+    });
+
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "我是Vue 事件侦听",
+            count: 0
+        },
+        template: `
+            <div id= "app">
+                <h3 @click="test">{{msg}}</h3>
+                <keep-alive>
+                    <one ref="one"></one>
+                </keep-alive>
+            </div>
+        `,
+        methods: {
+            test() {
+                console.log(this.$refs)
+            }
+        }
+    })
+</script>
+
+</html>

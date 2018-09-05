@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        .nav li {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .nav .selected {
+            background: #6ff;
+        }
+    </style>
+    <script src="../libs/js/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="sub"></div>
+    </div>
+</body>
+<script>
+    Vue.component("one", {
+        data() {
+            return {
+                msg: "我是组件one"
+            }
+        },
+        template: `
+            <div class='one' >
+                <h3>{{msg}}</h3>
+                <div class="sub" :style="{width:'200px',height:'200px',background:'#6ff',textAlign:'center',lineHeight:'200px'}"></div>
+            </div>
+        `
+    })
+    Vue.component("two", {
+        data() {
+            return {
+                msg: "我是组件two"
+            }
+        },
+        template: `
+            <div class='two'>
+                <h3>{{msg}}</h3>
+                <div class="sub" :style="{width:'200px',height:'200px',background:'#6ff',textAlign:'center',lineHeight:'200px'}"></div>
+            </div>
+            `
+    })
+
+    Vue.component("three", {
+        data() {
+            return {
+                msg: "我是组件three"
+            }
+        },
+        template: `
+        <div class='two'>
+            <h3>{{msg}}</h3>
+            <div class="sub" :style="{width:'200px',height:'200px',background:'#6ff',textAlign:'center',lineHeight:'200px'}"></div>
+        </div>
+        `
+    })
+
+    Vue.component("four", {
+        data() {
+            return {
+                msg: "我是组件three",
+            }
+        },
+        props: ["index"],
+        template: `
+            <ul class="nav" :style="{width:'200px',display:'flex',listStyle:'none'}">
+                <li @click="$emit('navSwip','one')" :class="{selected:index=='one'}">one</li>
+                <li @click="$emit('navSwip','two')" :class="{selected:index=='two'}">two</li>
+                <li @click="$emit('navSwip','three')" :class="{selected:index=='three'}">three</li>
+            </ul>
+            `
+    })
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            select: "one"
+        },
+        template: `   
+            <div id="app"  >
+                <four @navSwip="change" :index="select"></four>
+                <component :is="select"></component>
+            </div>
+        `,
+        methods: {
+            change(val) {
+                console.log(val)
+                this.select = val;
+            }
+        }
+    })
+</script>
+
+<!-- <ul>
+    <li>one</li>
+    <li>two</li>
+    <li>three</li>
+</ul> -->
+
+</html>

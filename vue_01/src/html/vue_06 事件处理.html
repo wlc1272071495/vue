@@ -7,21 +7,132 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <script src="../libs/js/vue.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        .wrap {
+            width: 200px;
+            height: 200px;
+            background: pink;
+            overflow: hidden;
+            border: 1px solid;
+        }
+        
+        .sub {
+            width: 100px;
+            height: 100px;
+            background: #6ff;
+            margin: 50px;
+        }
+    </style>
 </head>
 
 <body>
     <div id="example-1">
+        <h3>{{msg}}</h3>
+        <span>{{count}}</span>-------
+        <button @click="count++">+</button>
+        <div class="wrap" @mouseover="over " @mouseout="out">
+            <div class="sub"></div>
+        </div>
 
+        <h3>按键修饰符</h3>
+        <input type="text" @keyup.13="count++">
+        <input type="text" @keypress.space="count++">
+
+        <div class="wrap">
+            <div class="sub" @contextmenu.right.self.prevent="con1"></div>
+        </div>
+        <div class="wrap">
+            <div class="sub" @contextmenu.right.prevent.self="con2"></div>
+        </div>
+
+        <!-- 即使 Alt 或 Shift 被一同按下时也会触发 -->
+        <button @click.ctrl="fun">A</button>
+
+        <!-- 有且只有 Ctrl 被按下的时候才触发 -->
+        <button @click.ctrl.exact="fun">A</button>
+
+        <!-- 没有任何系统修饰符被按下的时候才触发 -->
+        <button @click.exact="fun">A</button>
+
+        <h3>管道过滤器</h3>
+        <div>{{eng | uppercase}}---{{count|fixed}}</div>
     </div>
 </body>
 <script>
+    // 事件
+    // click,dbclick
+    // keydown,keyup,keypress,
+    // mousedown,mouseup,mousemove,mouseover,
+    // focus,blur,change,input,
+    // touchstart,touchend,touchmove
+
+    // 修饰符
+    // 按键修饰符   只能配合表单一起使用
+    //  .13  enter键   .f1  f1键   .space 空格键
+    //  enter tab delete(捕获“ 删除” 和“ 退格” 键) esc space up down left right
+
+    // 事件修饰符
+    // .stop 阻止单击事件冒泡
+    // .prevent  阻止默认事件
+    // .capture 添加事件侦听器时使用事件捕获模式（即 内部元素触发的事件先在此处处理，然后交由内部元素自生处理）
+    // .self 只当在 event.target 是当前元素自身时触发处理函数 即事件不是从内部元素触发的
+
+    // 使用修饰符时， 顺序很重要； 相应的代码会以同样的顺序产生。 因此， 用 v - on: click.prevent.self 会阻止所有的点击， 而 v - on: click.self.prevent 只会阻止对元素自身的点击。
+
+    // .once  事件只触发一次
+
+    // .exact 修饰符 此修饰符允许你控制由精确的系统修饰符组合触发的事件。
+
+
+    // 系统修饰符
+    //  .ctrl .alt .shift .meta
+    //  注意：在 Mac 系统键盘上，meta 对应 command 键 (⌘)。在 Windows 系统键盘 meta 对应 Windows 徽标键 (⊞)。在 Sun 操作系统键盘上，meta 对应实心宝石键 (◆)。在其他特定键盘上，尤其在MIT 和 Lisp 机器的键盘、以及其后继产品，比如 Knight 键盘、space-cadet 键盘，meta 被标记为“META”。在 Symbolics 键盘上，meta 被标记为“META”或者“Meta”。
+
+    // 鼠标按钮修饰符
+    // .left .right .middle
+
+
+    // 管道 pipe filter 过滤器
+    // 管道符 声明这是个过滤器
+
+
+
     var example1 = new Vue({
         el: '#example-1',
         data: {
-
+            msg: "Vue 事件处理",
+            eng: "hello Vue",
+            count: 100
         },
         methods: {
-
+            over() {
+                console.log('I`m coming')
+            },
+            out() {
+                console.log('goodbuy')
+            },
+            fun() {
+                console.log(11111)
+            },
+            con1() {
+                console.log("@click.self.prevent")
+            },
+            con2() {
+                console.log("@click.prevent.self")
+            }
+        },
+        filters: { // 管道符 声明这是个过滤器
+            uppercase(val) {
+                return val.toUpperCase();
+            },
+            fixed(num) {
+                return num.toFixed(2);
+            }
         }
     });
 </script>

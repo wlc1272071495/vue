@@ -45,9 +45,23 @@
         <!-- 当选中时，`selected` 为字符串 "abc" -->
         <p>单选按钮</p>
         <select v-model="select">
+            <!-- disabled 无法选中第一个option -->
+            <option disabled value="">请选择...</option>
+            <!-- :value="option.age" -->
             <option v-for="option in options">{{option.name}}</option>
         </select>
         <span>selected:{{select}}</span>
+
+        <div id="example-6">
+            <select v-model="selected" multiple style="width: 50px;">
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
+            </select>
+            <br>
+            <span>Selected: {{ selected }}</span>
+        </div>
+
 
         <p>单选按钮</p>
         <input type="checkbox" v-model="toggle" @click="console(toggle)" v-bind:true-value="true" v-bind:false-value="false">
@@ -100,6 +114,7 @@
                 age: 18
             }],
             select: "wwww",
+            selected: [],
             toggle: false,
             // a: "aaaaaaa",
             // b: "bbbbbbb",

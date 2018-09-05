@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        .nav li {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .nav .selected {
+            background: #6ff;
+        }
+    </style>
+    <script src="../libs/js/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="sub"></div>
+    </div>
+</body>
+<script>
+    // 经测试注意，每次切换路由组件该组件中的count值都会重置为0；
+    // 这是因为你每次切换新标签的时候， Vue 都创建了一个新的 路由实例。
+
+    // 重新创建动态组件的行为通常是非常有用的， 但是有的时候， 我们更希望那些标签的组件实例能够被在它们第一次被创建的时候缓存下来。 为了解决这个问题， 我们可以用一个 < keep - alive > 元素将其动态组件包裹起来。操作如下
+
+    Vue.component("one", {
+        data() {
+            return {
+                msg: "我是组件one",
+                count: 0
+            }
+        },
+        template: `
+            <div class='one' >
+                <h3>{{msg}}</h3>
+                <div class="sub" :style="{width:'200px',height:'200px',background:'#6ff',textAlign:'center',lineHeight:'50px'}">
+                     <div>count:{{count}}</div>
+                     <button @click="count++">点击</button>
+                </div>
+            </div>
+        `
+    })
+    Vue.component("two", {
+        data() {
+            return {
+                msg: "我是组件two",
+                count: 0
+            }
+        },
+        template: `
+            <div class='two'>
+                <h3>{{msg}}</h3>
+                <div class="sub" :style="{width:'200px',height:'200px',background:'#6ff',textAlign:'center',lineHeight:'50px'}">
+                     <div>count:{{count}}</div>
+                     <button @click="count++">点击</button>
+                </div>
+            </div>
+            `
+    })
+
+    Vue.component("three", {
+        data() {
+            return {
+                msg: "我是组件three",
+                count: 0
+            }
+        },
+        template: `
+        <div class='two'>
+            <h3>{{msg}}</h3>
+            <div class="sub" :style="{width:'200px',height:'200px',background:'#6ff',textAlign:'center',lineHeight:'50px'}">
+                <div>count:{{count}}</div>
+                 <button @click="count++">点击</button>
+            </div>
+        </div>
+        `
+    })
+
+    Vue.component("four", {
+        data() {
+            return {
+                msg: "我是组件three",
+            }
+        },
+        props: ["index"],
+        template: `
+            <ul class="nav" :style="{width:'200px',display:'flex',listStyle:'none'}">
+                <li @click="$emit('navSwip','one')" :class="{selected:index=='one'}">one</li>
+                <li @click="$emit('navSwip','two')" :class="{selected:index=='two'}">two</li>
+                <li @click="$emit('navSwip','three')" :class="{selected:index=='three'}">three</li>
+            </ul>
+            `
+    })
+
+
+    // var vm = new Vue({
+    //     el: "#app",
+    //     data: {
+    //         select: "one"
+    //     },
+    //     template: `   
+    //         <div id="app"  >
+    //             <four @navSwip="change" :index="select"></four>
+    //             <component :is="select"></component>
+    //         </div>
+    //     `,
+    //     methods: {
+    //         change(val) {
+    //             console.log(val)
+    //             this.select = val;
+    //         }
+    //     }
+    // })
+
+    // 经测试注意，每次切换路由组件该组件中的count值都会重置为0；
+    // 这是因为你每次切换新标签的时候， Vue 都创建了一个新的 路由实例。
+
+    // 重新创建动态组件的行为通常是非常有用的， 但是有的时候， 我们更希望那些标签的组件实例能够被在它们第一次被创建的时候缓存下来。 为了解决这个问题， 我们可以用一个 < keep - alive > 元素将其动态组件包裹起来。操作如下
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            select: "one"
+        },
+        template: `   
+            <div id="app"  >
+                <four @navSwip="change" :index="select"></four>
+                <keep-alive>
+                     <component :is="select"></component>
+                </keep-alive>
+            </div>
+        `,
+        methods: {
+            change(val) {
+                console.log(val)
+                this.select = val;
+            }
+        }
+    })
+</script>
+
+</html>

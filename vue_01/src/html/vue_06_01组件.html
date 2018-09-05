@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+</head>
+
+<body>
+    <div id="example-1">
+        <!-- <my-com></my-com>
+        <child></child> -->
+        <!-- <my-component></my-component> -->
+    </div>
+</body>
+<script>
+    var {
+        component
+    } = Vue;
+
+    //一个组件的 data 选项必须是一个函数，因此每个实例可以维护一份被返回对象的独立的拷贝：
+    // 所以data的写法最好是
+    // data() {
+    //         return {
+
+    //         }
+    // }
+
+    Vue.component("my-com", {
+        template: `
+        <div>
+            <h2>我是子组件---myCom</h2>
+            <span>呀吼:{{msg}}</span>
+            <div v-for="(value,key,index) in detail">
+                <span>{{key}}---{{value}}---{{index}}</span>
+            </div>
+            <span>{{count}}</span>
+            <button @click="count++">+</button><br >
+            <button @click="$emit('addFont')">font-size Add</button>
+            <button @click="$emit('changeBg',colorArr)">background change </button>
+        </div>
+        `,
+        data() {
+            return {
+                msg: "hello myCon",
+                count: 100,
+                colorArr: ["red", "yellow", "green", "blue", "skyblue", "pink"]
+
+
+            }
+        },
+        props: {
+            detail: {
+                required: true,
+                type: Object
+            }
+        }
+    })
+
+    var child = Vue.component("child", {
+        template: `
+            <div>
+                <p>我是子元素child</p>
+                <p>{{name}}---{{type}}</p>
+            </div >
+                `,
+        data() {
+            return {
+                name: "child",
+                type: "Vue Component"
+            }
+        }
+    })
+
+    Vue.component("con3", {
+        data: function() {
+            return {
+                msg: "我是 组件3"
+            }
+        },
+        template: `
+        <div class="con3">
+            <h3>{{msg}}</h3>
+        </div>
+        `
+    })
+
+    var example1 = new Vue({
+        el: '#example-1',
+        template: `
+            <div id='example-1'>
+                <div :style="{fontSize:fontSize+'em',background:backgroundColor}">
+                    <my-com :detail="detail" @addFont="fontAdd" @changeBg="bg"></my-com>
+                </div>
+                <div :style="{background:backgroundColor,fontSize:fontSize+'em'}">
+                    <my-com :detail="detail" @changeBg="bg" @addFont="fontAdd"></my-com>
+                </div> 
+                <child></child>
+                <con3></con3>
+            </div>
+        `,
+        data: {
+            detail: {
+                name: "wlc",
+                age: 18,
+                hobby: "Ani",
+                work: "worker",
+            },
+            fontSize: 1,
+            backgroundColor: "#fff"
+        },
+        computed: {},
+        methods: {
+            fontAdd(font) {
+                this.fontSize += 0.1;
+            },
+            bg(arr) {
+                // console.log(arr)
+                var index = Math.round(Math.random() * arr.length);
+                this.backgroundColor = arr[index];
+            }
+        }
+    });
+</script>
+
+</html>

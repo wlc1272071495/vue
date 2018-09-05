@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        .one {
+            height: 400px;
+        }
+        
+        .two {
+            background: #6ff;
+        }
+    </style>
+    <script src="../libs/js/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+
+    </div>
+</body>
+<script>
+    // 在每个 new Vue 实例的子组件中，其根实例可以通过 $root 属性进行访问;
+    // $parent 属性可以用来从一个子组件访问父组件的实例。 它提供了一种机会， 可以在后期随时触达父级组件， 以替代将数据以 prop 的方式传入子组件的方式。
+
+    // $refs  访问子组件实例或子元素  给子组件设置ref="name",之后通过$refs.name 调用该组件，获取组建中的属性或方法
+    var oneCom = Vue.component("one", {
+        data() {
+            return {
+                msg: "我是子模块 一",
+                date: (new Date()).toLocaleDateString()
+            }
+        },
+        template: `
+            <div class="one">
+                <h3 @click="refsTest()">{{msg}}-----{{date}}</h3>
+                <two  ref="two"></two>
+            </div>
+        `,
+        methods: {
+            refsTest() {
+                console.log(this.$refs) //two 模块
+                console.log(this.$refs.two.$refs.input); //two 模块
+                this.$refs.two.$refs.input.focus();
+            }
+
+        }
+
+    });
+    Vue.component("two", {
+        data() {
+            return {
+
+                msg: "我是子模块 二",
+                data: {
+                    name: "wlc",
+                    age: 18
+                }
+            }
+        },
+        template: `
+            <div class="two" >
+                <h3 @click="cick">{{msg}}</h3>
+                <div >{{data.name}}----{{data.age}}</div>
+                <input ref="input" />   
+            </div>
+        `,
+        methods: {
+            cick() {
+                console.log(this.$root == vm)
+                console.log(this.$root.$data.msg)
+                console.log(this.$parent.$data)
+                this.$parent.$data.date = (new Date()).toDateString();
+            }
+        }
+
+    })
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "我是Vue Test"
+        },
+        template: `
+            <div id= "app">
+                <h3 @click="refsTest">{{msg}}</h3>
+                <one ref="one"></one>
+            </div>
+        `,
+        methods: {
+            refsTest() {
+                console.log(this.$refs.one) //one 模块
+                console.log(this.$refs.one.$refs) //two 模块
+            }
+        }
+    })
+</script>
+
+</html>

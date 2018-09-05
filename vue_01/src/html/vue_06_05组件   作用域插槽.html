@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        .nav li {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .nav .selected {
+            background: #6ff;
+        }
+    </style>
+    <script src="../libs/js/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+
+    </div>
+</body>
+<script>
+    Vue.component("one", {
+        data() {
+            return {
+                msg: "正常路由调用",
+
+            }
+        },
+        props: ["todos"],
+        template: `
+            <div class='one' >
+                <h3>{{msg}}</h3>
+                <ul>
+                    <li v-for="(todo,index) in todos" :key="index" >
+                        {{todo.name}}
+                    </li>
+                </ul>
+            </div>
+        `
+
+    })
+    Vue.component("two", {
+        data() {
+            return {
+                msg: "作用域插槽测试",
+
+            }
+        },
+        props: ["todos"],
+        template: `
+            <div class='two' >
+                <h3>{{msg}}</h3>
+                <ul>
+                    <li v-for="(todo,index) in todos" :key="index" >
+                        <slot :todo="todo"></slot>
+                    </li>
+                </ul>
+            </div>
+        `
+
+    })
+
+    // 有的时候你希望提供的组件带有一个可从子组件获取数据的可复用的插槽，这时就需要用到 slot-scope,
+    //  slot-scope="slotProps"  把从组件中   <slot :todo="todo"></slot>  动态传出todo的值赋值给slotProps
+    // 调用数据时  ： slotProps.todo["attr"]
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            todos: [{
+                name: "wlc",
+                age: 18
+            }, {
+                name: "lili",
+                age: 22
+            }, {
+                name: "lulu",
+                age: 24
+            }, ]
+        },
+        template: `     
+            <div id="app"  >
+                <one  :todos="todos"></one>
+                <two  :todos="todos" >
+                    <template slot-scope="slotProps">
+                        <a :style="{color:'red'}">
+                            {{slotProps.todo.name}}
+                        </a>
+                    </template>
+                </two>
+                <two  :todos="todos" >
+                   <template slot-scope="{todo}">
+                        <div>slot-scope 解构赋值写法</div>
+                        <a :style="{color:'red'}">
+                            {{todo.age}}
+                        </a>
+                    </template>
+                </two>
+            </div>
+        `,
+        methods: {
+
+        }
+    })
+</script>
+
+</html

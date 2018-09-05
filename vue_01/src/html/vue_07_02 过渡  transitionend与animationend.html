@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        /* .v-enter-active,
+        .v-leave-active {
+            opacity: 1;
+            transition: opacity .5s;
+        }
+        
+        .v-enter,
+        .v-leave-to {
+            opacity: 0;
+        } */
+        
+        .v-enter-active,
+        .v-leave-active {
+            opacity: 0;
+            transition: opacity .5s;
+        }
+        
+        .v-enter-to,
+        .v-leave {
+            opacity: 1;
+        }
+        
+        .v-enter,
+        .v-leave-to {
+            opacity: 0;
+        }
+        
+        .one {
+            height: 200px;
+        }
+        
+        .fade-enter,
+        .fade-leave-to {
+            height: 0px;
+            overflow: hidden;
+        }
+        
+        .fade-enter-active,
+        .fade-leave-active {
+            height: 0;
+            transition: all 0.5s 0.5s;
+        }
+        
+        .fade-enter-to,
+        .fade-leave {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .ani-enter,
+        .ani-leave-to {
+            transform: scale(1);
+        }
+        
+        .ani-enter-active,
+        .ani-leave-active {
+            animation: big .5s;
+        }
+        
+        .ani-leave-active {
+            animation: big .5s reverse;
+        }
+        
+        .ani-enter-to,
+        .ani-leave {
+            transform: scale(1);
+        }
+        
+        @keyframes big {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.5);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app"></div>
+
+
+</body>
+<script>
+    //  Vue 可以自动得出过渡效果的完成时机
+    // 默认情况下，Vue 会等待其在过渡效果的根元素的第一个 transitionend 或 animationend 事件
+    // 在这种情况下你可以用 <transition> 组件上的 duration 属性定制一个显性的过渡持续时间 (以毫秒计)：<transition :duration="1000">...</transition>
+    // 你也可以定制进入和移出的持续时间：
+    // <transition :duration="{ enter: 500, leave: 800 }">...</transition>
+    Vue.component("one", {
+        data() {
+            return {
+                msg: "我是测试 组件一"
+            }
+        },
+        template: `
+            <div class="one" :style="{width:'200px',textAlign:'center',background:'#6ff'}">
+                <h3>{{msg}}</h3>
+                <slot></slot>    
+            </div>
+        `
+    })
+    Vue.component("two", {
+        data() {
+            return {
+                msg: "我是测试vue 动画的 组件二"
+            }
+        },
+        template: `
+            <div @animationend="$emit('ani')" class="two" :style="{width:'400px',textAlign:'center',background:'#6ff'}">
+                <h3>{{msg}}</h3>
+                <slot></slot>    
+            </div>
+        `
+    })
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue_07_01 过渡  元素或组件的过渡",
+            show: true,
+            aniShow: true
+        },
+        template: `
+           <div id="app">
+                <h3>{{msg}}</h3>
+                <button @click="change">点击控制</button><br/>
+                <div :style="{float:'left',width:'200px',height:'200px'}">
+                    <transition :duration="{ enter: 500, leave: 800 }">
+                        <p @transitionend="tell" v-show="show" :style="{width:'200px',height:'200px',textAlign:'center',background:'#6ff'}">我是过度的标签p</p>   
+                    </transition>
+                </div>
+                <div :style="{float:'left',width:'200px',height:'200px'}">
+                    <transition :duration="{ enter: 2000, leave: 3000 }" name="fade" >
+                        <one v-show="!show">
+                             我是盒子一
+                        </one>
+                    </transition>
+                </div>
+                 <div :style="{float:'left',width:'200px',height:'200px'}">
+                    <transition name="fade" :duration="{ enter: 2000, leave: 3000 }"  >
+                        <one v-show="show">
+                            我是盒子二
+                        </one>
+                    </transition>
+                </div>
+                <h3 :style="{clear:'both'}">animation Test</h3>
+                <button @click="aniShow=!aniShow">animation</button>
+                <transition name="ani">
+                    <two @ani="tell" v-show="aniShow">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis enim libero, at lacinia diam fermentum id. Pellentesque habitant morbi tristique senectus et netus.
+                    </two>
+                </transition>
+              
+               
+           </div>
+        `,
+        methods: {
+            change() {
+                this.show = !this.show;
+                console.log(this.show)
+            },
+            tell() {
+                console.log("transition||animation 完成！")
+            }
+        }
+    })
+</script>
+
+
+</html>

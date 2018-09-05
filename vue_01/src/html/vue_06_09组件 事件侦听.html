@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        .one {
+            height: 400px;
+        }
+        
+        .two {
+            background: #6ff;
+        }
+    </style>
+    <script src="../libs/js/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <input id="test" type="text">
+    </div>
+</body>
+<script>
+    function Pickday(obj) {
+        this.el = obj.field;
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth();
+        var day = date.getDate();
+        var str = `${year}-${month}-${day}`;
+        if (obj.format == "YYYY-MM-DD") {
+            this.el.value = str;
+        } else if (obj.format == "YYYY/MM/DD") {
+            str = str.replace(/-/ig, "/")
+            this.el.value = str;
+        } else {
+            str = str.replace(/-/ig, " ")
+            this.el.value = str;
+        }
+        this.destroy = function() {
+            this.el.value = "";
+            this.el = null;
+        }
+    }
+
+    var oneCom = Vue.component("one", {
+        data() {
+            return {
+                msg: "我是子模块 一",
+                date: (new Date()).toLocaleDateString()
+            }
+        },
+        template: `
+            <div class="one">
+                <h3 @click="test">{{msg}}-----{{date}}</h3>
+                <input ref='input' /> 
+                <button @click="destroy">销毁</button>  
+            </div>
+        `,
+        methods: {
+            test() {
+                console.log(this.$refs.input)
+            },
+            destroy() {
+                this.$destroy()
+            }
+        },
+        mounted() {
+            this.pickday = new Pickday({
+                field: this.$refs.input,
+                format: "YYYY-MM-DD"
+            })
+        },
+        beforeDestroy() {
+            this.pickday.destroy();
+        }
+
+
+    });
+    var oneCom = Vue.component("two", {
+        data() {
+            return {
+                msg: "我是子模块 二",
+                date: (new Date()).toLocaleDateString()
+            }
+        },
+        template: `
+            <div class="one">
+                <h3 @click="test">{{msg}}-----{{date}}</h3>
+                <input ref='input1' /> 
+                <button @click="destroy">销毁</button>  
+            </div>
+        `,
+        methods: {
+            test() {
+                console.log(this.$refs.input1)
+            },
+            destroy() {
+                this.$destroy()
+            }
+        },
+        mounted() {
+            var pickday = new Pickday({
+                field: this.$refs.input1,
+                format: "YYYY-MM-DD"
+            });
+            this.$once("hook:beforeDestroy", function() {
+                pickday.destroy()
+            })
+        }
+
+
+    });
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "我是Vue 事件侦听"
+        },
+        template: `
+            <div id= "app">
+                <h3 @click="test">{{msg}}</h3>
+                <one></one>
+                <one></one>
+                <two></two>
+                <two></two>
+            </div>
+        `,
+        methods: {
+            test() {
+                console.log(this.$refs)
+            }
+        }
+    })
+</script>
+
+</html>

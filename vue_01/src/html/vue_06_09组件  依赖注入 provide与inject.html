@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        .one {
+            height: 400px;
+        }
+        
+        .two {
+            background: #6ff;
+        }
+    </style>
+    <script src="../libs/js/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+
+    </div>
+</body>
+<script>
+    //provide  提供，供给，供应
+    //inject   给...注射，给...投入/添加
+    // 在一个多重嵌套组件里，我们希望父组件中所有的后代都需要访问一个 getMap 方法， 以便知道要跟那个地图进行交互。 不幸的是， 使用 $parent 属性无法很好的扩展到更深层级的嵌套组件上。 这也是依赖注入的用武之地， 它用到了两个新的实例选项： provide 和 inject。
+    var oneCom = Vue.component("one", {
+        data() {
+            return {
+                msg: "我是子模块 一",
+                date: (new Date()).toLocaleDateString()
+            }
+        },
+        template: `
+            <div class="one">
+                <h3 @click="getMap">{{msg}}-----{{date}}</h3>
+                <two  ref="two"></two>
+            </div>
+        `,
+        methods: {
+
+
+        },
+        inject: ["getMap"] //注入，或者说依赖
+
+    });
+    Vue.component("two", {
+        data() {
+            return {
+
+                msg: "我是子模块 二",
+                data: {
+                    name: "wlc",
+                    age: 18
+                }
+            }
+        },
+        template: `
+            <div class="two" >
+                <h3 @click="getMap">{{msg}}</h3>
+                <div >{{data.name}}----{{data.age}}</div>
+                <input ref="input" />   
+            </div>
+        `,
+        methods: {
+
+        },
+        inject: ["getMap"]
+
+    })
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "我是Vue Test"
+        },
+        template: `
+            <div id= "app">
+                <h3 @click="refsTest">{{msg}}</h3>
+                <one ref="one"></one>
+            </div>
+        `,
+        methods: {
+            refsTest() {
+                console.log(this.$refs.one) //one 模块
+                console.log(this.$refs.one.$refs) //two 模块
+            },
+            getMap() {
+                console.log("hello,我是父组件中申明的函数getMap")
+            }
+        },
+        provide() { //提供
+            return {
+                getMap: this.getMap
+            }
+        }
+    })
+</script>
+
+</html>

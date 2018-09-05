@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        .nav li {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .nav .selected {
+            background: #6ff;
+        }
+    </style>
+    <script src="../libs/js/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="sub"></div>
+    </div>
+</body>
+<script>
+    // $attrs--继承所有的父组件属性（ 除了prop传递的属性、 class 和 style）
+
+    // inheritAttrs： 默认值true, 继承所有的父组件属性（ 除props的特定绑定） 作为普通的HTML特性应用在子组件的根元素上， 如果你不希望组件的根元素继承特性设置inheritAttrs: false, 但是class属性会继承;
+
+    // $listeners--属性， 它是一个对象， 里面包含了作用在这个组件上的所有监听器(注意是监听器,)， 你就可以配合 v - on = "$listeners"
+    // 将所有的事件监听器指向这个组件的某个特定的子元素。
+
+    // 参考 https://my.oschina.net/u/2612473/blog/1817903
+    Vue.component("one", {
+        model: {
+            prop: "checked",
+            event: "change"
+        },
+        data() {
+            return {
+                msg: "我是自定义组件的 v-model",
+                checked: true
+            }
+        },
+        template: `
+            <div class='one' >
+                <h3>{{msg}}</h3>
+                <input type="checkbox" :checked="checked" @click="$emit('change',$event.target.checked)" />
+            </div>
+        `
+
+        // <input type="checkbox" :checked="checked" @click="$emit('change',$event.target.checked)" />
+    })
+
+    Vue.component("two", {
+        data() {
+            return {
+                msg: "我是组件two"
+            }
+        },
+        template: `
+            <div class='two'>
+                <h3>{{msg}}</h3>
+                <div class="sub" :style="{width:'400px',height:'200px',background:'#6ff',textAlign:'center',lineHeight:'50px'}">
+                    <slot name="header"></slot>
+                    <slot></slot>
+                    <slot name="footer"></slot>
+                </div>
+            </div>
+            `
+    })
+
+    //在一个组件的根元素上直接监听一个原生事件;这时，你可以使用 v-on 的 .native 修饰符： #click.native="fn"
+    Vue.component("three", {
+
+        data() {
+            return {
+                msg: "我是组件 三",
+                checked: true
+            }
+        },
+        template: `
+        <!--<div class='three'>
+            <h3>{{msg}}</h3> -->
+            <input type="text"  @focus="$emit('focus',1)" />
+       <!-- </div>-->
+        `
+    })
+
+    Vue.component("four", {
+        inheritAttrs: false, // 此处设置禁用继承特性
+        data() {
+            return {
+                msg: "我是组件 四",
+                checked: true
+            }
+        },
+        template: `
+            <div class='three'>
+                <h3 v-on="h3EventListeners">{{msg}}</h3>
+                <input type="text"  v-bind="$attrs" v-on="inputEventListeners" />
+                <h4 :style='{width:"200px",height:"200px",backgroundColor:"#6ff" }' @mouseover="over">我是鼠标滑过测试</h4>
+            </div>
+        `,
+        computed: {
+            inputEventListeners() {
+                console.log(111111);
+                var that = this;
+                return Object.assign({}, this.$listeners, {
+                    focus: function(event) {
+                        console.log(that.$listeners);
+                        // that.$emit("focus", event.target.value);
+                        that.$emit("focus", " i`m onfocus");
+                    },
+                    input(e) {
+                        // console.log(e)
+                        that.$emit("input", " i`m oninput")
+                    }
+                })
+
+            },
+            h3EventListeners() {
+                // console.log(111111);
+                var that = this;
+                return Object.assign({}, this.$listeners, {
+                    click(e) {
+                        console.log(that.$listeners);
+                        that.$emit("click", " i`m clicked")
+                    }
+                })
+
+            }
+        },
+        methods: {
+            over(e) {
+                console.log(this.$listeners)
+                console.log(e.target)
+            }
+        }
+
+    })
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            select: "one",
+            status: true
+        },
+        template: `   
+            <div id="app"  >
+                <one v-model="status"></one>
+                <two v-show="status">
+                    <template slot="header">
+                        <h3>我是组件two中插槽一 的header</h3>
+                    </template>
+                    <div>
+                        我是组件two中插槽一 的内容部分content
+                    </div>
+                    <template slot="footer">
+                        <h3>我是组件two中插槽一 的footer</h3>
+                    </template>
+                </two>
+                <two v-show="!status">
+                    <template slot="header">
+                        <h3>我是组件two中插槽二 的header</h3>
+                    </template>
+                    <div>
+                        我是组件two中插槽二 的内容部分content
+                    </div>
+                    <template slot="footer">
+                        <h3>我是组件two中插槽二 的footer</h3>
+                    </template>
+                </two>
+                <h3>将原生事件绑定到组件</h3>
+                <three  @focus.native="onFocus"></three>
+                <four  placeholder="请输入..." class="four" name="123123" @click="onClick" @focus="onFocus" @input="onFocus" ></four>
+            </div>
+        `,
+        methods: {
+            change(val) {
+                console.log(val)
+                this.select = val;
+            },
+            onFocus(el) {
+                console.log("onfocus:" + el)
+            },
+            onClick(el) {
+                console.log("onclick:" + el)
+            },
+            onInput(el) {
+                console.log("onfocus:" + el)
+            }
+        }
+    })
+</script>
+
+
+<!-- <ul>
+    <li>one</li>
+    <li>two</li>
+    <li>three</li>
+</ul> -->
+
+</html
