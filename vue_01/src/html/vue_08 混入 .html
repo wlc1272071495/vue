@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue混入</title>
+    <script src="../libs/js/vue.js"></script>
+</head>
+
+<body>
+    <div id="app"></div>
+    <div id="example"></div>
+</body>
+<script>
+    var mixins = {
+
+        data() {
+            return {
+                msg: "混入 测试  生成的组件"
+            }
+        },
+        template: `
+            <div id="one">
+                <h3>{{msg}}</h3>
+
+            </div>
+        `,
+        created: function() {
+            this.hello()
+        },
+        methods: {
+            hello: function() {
+                console.log('hello from mixin!')
+            }
+        }
+    }
+    var one = Vue.extend({
+        mixins: [mixins],
+    })
+
+    // var one = new Component();   // 此处直接创建Vue 实例用法 new Component().$mount('#mount-point')
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue_08 混入 测试 "
+        },
+        template: `
+            <div id="app">
+                <h3>{{msg}}</h3>
+                <one></one>
+            </div>
+        `,
+        components: {
+            one
+        }
+    })
+
+    // 选项合并
+    // 当组件和混入对象含有同名选项时，这些选项将以恰当的方式混合。
+    // 比如，数据对象在内部会进行浅合并(一层属性深度) ，在和组件的数据发生冲突时以组件数据优先。
+
+    // 同名钩子函数将混合为一个数组， 因此都将被调用。 另外， 混入对象的钩子将在组件自身钩子之前调用。
+
+    // 值为对象的选项， 例如 methods, components 和 directives， 将被混合为同一个对象。 两个对象键名冲突时， 取组件对象的键值对。
+
+    // 总结  混入同名时 钩子函数都会执行(混入对象的钩子将在组件自身钩子之前调用)，其他冲突组件为准
+    var myMixin = {
+        data() {
+            return {
+                msg: "我是混入到vue 实例的mixins"
+            }
+        },
+        template: `
+            <div id="example">
+                <span>{{msg}}</span>
+                 <ul>
+                    <li v-for="item in dataList" :key="item">
+                        {{item}}
+                    </li>
+                </ul>
+            </div>
+        `,
+        created() {
+            console.log("我是mixins 中的钩子函数 created")
+        }
+    }
+
+    var example = new Vue({
+        el: "#example",
+        data: {
+            dataList: [1, 2, 3, 4, 5]
+        },
+        mixins: [myMixin],
+        created() {
+            console.log("我是Vue 中的钩子函数 created")
+            console.log(this.$data)
+        }
+    })
+</script>
+
+</html>

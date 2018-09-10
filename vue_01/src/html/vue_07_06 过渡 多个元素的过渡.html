@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        .test1 {
+            padding: 50px;
+        }
+        
+        .one {
+            height: 200px;
+        }
+        
+        div button {
+            width: 60px;
+            height: 40px;
+            text-align: center;
+        }
+        
+        .switch-enter,
+        .switch-leave-to {
+            opacity: 0;
+        }
+        
+        .switch-enter-active,
+        .switch-leave-active {
+            opacity: 0;
+            transition: all 0.5s;
+        }
+        
+        .switch-enter-to,
+        .switch-leave {
+            opacity: 1;
+        }
+        
+        .fade,
+        .leave-out {
+            height: 0px;
+            overflow: hidden;
+        }
+        
+        .fade-to,
+        .leave-to {
+            height: 0px;
+            transition: all 0.5s 0.5s;
+        }
+        
+        .fade-in,
+        .leave {
+            height: 200px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app"></div>
+
+
+</body>
+<script>
+    // 注意 < transition > can only be used on a single element.Use < transition - group > for lists;需要通过 key 特性设置唯一的值来标记以让 Vue 区分它们，否则 Vue 为了效率只会替换相同标签内部的内容。即使在技术上没有必要，给在 <transition> 组件中的多个元素设置 key 是一个更好的实践。
+
+    // 同时生效的进入和离开的过渡不能满足所有要求，所以 Vue 提供了 过渡模式
+    // in-out： 新元素先进行过渡， 完成之后当前元素过渡离开。
+    // out-in ：当前元素先进行过渡， 完成之后新元素过渡进入。
+    Vue.component("one", {
+        data() {
+            return {
+                msg: "我是测试 组件一"
+            }
+        },
+        template: `
+            <div class="one" :style="{width:'200px',textAlign:'center',background:'#6ff'}">
+                <h3>{{msg}}</h3>
+                <slot></slot>    
+            </div>
+        `
+    })
+    Vue.component("two", {
+        data() {
+            return {
+                msg: "我是测试vue 动画的 组件二"
+            }
+        },
+        template: `
+            <div @animationend="$emit('ani')" class="two" :style="{width:'200px',textAlign:'center',background:'#6ff'}">
+                <h3>{{msg}}</h3>
+                <slot></slot>    
+            </div>
+        `
+    })
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue_07_01 过渡  元素或组件的过渡",
+            show: true,
+            isEditing: false,
+            count: 0
+        },
+        template: `
+        <!-- 
+        注意 <transition> can only be used on a single element. Use <transition-group> for lists; 需要通过 key      特性设置唯一的值来标记以让 Vue 区分它们，否则 Vue 为了效率只会替换相同标签内部的内容。即使在技术上没有必      要，给在 <transition> 组件中的多个元素设置 key 是一个更好的实践。
+        同时生效的进入和离开的过渡不能满足所有要求，所以 Vue 提供了 过渡模式
+            in-out： 新元素先进行过渡， 完成之后当前元素过渡离开。
+            out-in ：当前元素先进行过渡， 完成之后新元素过渡进入。    
+        -->
+           <div id="app">
+                <h3>{{msg}}</h3>
+                <h3>多元素过渡</h3>
+                <div class="test1" :style="{width:'400px',height:'200px',border:'1px solid'}">
+                    <transition-group name="switch" :duration="2000"  mode="out-in"
+
+                    >
+                        <button @click="isEditing=!isEditing"  v-if="isEditing" key="save">save</button>
+                        <button @click="isEditing=!isEditing"  v-else key="edit">edit</button>
+                    </transition-group>
+                </div>
+
+                <h3>多组件过渡</h3>
+                <button @click="count++">点击控制</button><br/>
+                 <div :style="{float:'left',width:'400px',height:'200px'}">
+                    <transition-group  appear
+                    appear-class="fade" 
+                    appear-active-class="fade-to" 
+                    appear-to-class="fade-in"
+                    v-on:before-appear="beforeAppear"
+                    enter-class="fade" enter-active-class="fade-to" enter-to-class="fade-in"
+                    leave-class="leave" leave-active-class="leave-to" leave-to-class="leave-out"
+                    >
+                        <one :key="1" v-if="count%2==0">
+                            初始渲染过渡 test1
+                        </one>
+                        <one :key="2"  v-else>
+                            初始渲染过渡 test2
+                        </one>
+                    </transition-group >
+                </div>
+           </div>
+        `,
+        methods: {
+            beforeAppear() {
+                console.log(1111111111)
+            },
+            change() {
+                this.show = !this.show;
+                console.log(this.show)
+            },
+            tell() {
+                console.log("transition||animation 完成！")
+            }
+        }
+    })
+</script>
+
+
+</html>

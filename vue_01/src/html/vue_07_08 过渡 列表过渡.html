@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/lodash.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        li {
+            list-style: none;
+        }
+        
+        #app {
+            padding: 50px;
+        }
+        
+        #app h3 {
+            margin-bottom: 25px;
+        }
+        
+        button {
+            user-select: none;
+            width: 60px;
+            height: 40px;
+            text-align: center;
+        }
+        
+        .page {
+            display: inline-block;
+        }
+        
+        .page li {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            background: gray;
+            /* float: left; */
+            margin: 10px;
+        }
+        
+        .page-enter,
+        .page-leave-to {
+            opacity: 0;
+            transform: translateY(60px);
+        }
+        
+        .page-enter-active,
+        .page-leave-active {
+            opacity: 1;
+            transition: all 1s;
+            transform: translateY(60px);
+        }
+        
+        .page-enter-to,
+        .page-leave {
+            opacity: 1;
+            transform: translateY(0px);
+        }
+        
+        .page-move {
+            transition: all 1s;
+        }
+        
+        .page-leave-active {
+            position: absolute;
+            /* 
+                此处通过使用position：absolute;来使删除元素立即不占位，使后面元素有缓慢向前移动的效果
+             */
+        }
+        
+        .page-item {
+            /* float: left;   */
+            /* 此处使用float会导致删除元素左移；建议使用 display: inline-block;   */
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app"></div>
+
+
+</body>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue_07_07 过渡 列表过渡",
+            dataList: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+            nextNum: 10
+        },
+        template: `
+    
+           <div id="app">
+                <h3>{{msg}}</h3>
+                <button @click="add">add</button>
+                <button @click="del">remove</button>
+                <button @click="random">random</button>
+                <br/>
+                <!-- 
+                    tag 定义包裹所有li标签的父元素，class为该父元素的class名；
+                    内部元素 总是需要 提供唯一的 key 属性值，此key只用对应item好一些，用index容易报错。
+                    
+                    <transition-group> 组件还有一个特殊之处。不仅可以进入和离开动画，还可以改变定位。要使用这个新功能只需了解新增的 v-move 特性，它会在元素的改变定位的过程中应用。像之前的类名一样，可以通过 name 属性来自定义前缀，也可以通过 move-class 属性手动设置。
+                    此处参考   style   .page-move ；
+
+
+
+                -->
+                <transition-group name="page" tag="ul" Class="page">
+                    <li class="page-item"   v-for="(item,index) in dataList" :key="item">
+                        {{item}}
+                    </li>
+                </transition-group>
+
+           </div>
+        `,
+        methods: {
+            random() {
+                //   _.shuffle (lodash方法) 创建一个被打乱值的集合 。
+                this.dataList = _.shuffle(this.dataList)
+            },
+            add() {
+                var randomIndex = Math.floor(Math.random() * this.dataList.length);
+                this.dataList.splice(randomIndex, 0, this.nextNum++);
+            },
+            del() {
+                var randomIndex = Math.floor(Math.random() * this.dataList.length);
+                this.dataList.splice(randomIndex, 1);
+                console.log(this.dataList)
+            }
+        }
+    })
+</script>
+
+
+</html>

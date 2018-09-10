@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        .one {
+            height: 200px;
+        }
+        
+        .fade,
+        .leave-out {
+            height: 0px;
+            overflow: hidden;
+        }
+        
+        .fade-to,
+        .leave-to {
+            height: 0px;
+            transition: all 0.5s 0.5s;
+        }
+        
+        .fade-in,
+        .leave {
+            height: 200px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app"></div>
+
+
+</body>
+<script>
+    // 我们可以通过以下特性来自定义过渡类名：
+
+    // enter - class
+    // enter - active - class
+    // enter - to - class(2.1 .8 + )
+    // leave - class
+    // leave - active - class
+    // leave - to - class(2.1 .8 + )
+    // 例如： 
+    //  <transition
+    //         name="custom-classes-transition"
+    //         enter-active-class="animated tada"
+    //         leave-active-class="animated bounceOutRight"
+    //     >
+    Vue.component("one", {
+        data() {
+            return {
+                msg: "我是测试 组件一"
+            }
+        },
+        template: `
+            <div class="one" :style="{width:'200px',textAlign:'center',background:'#6ff'}">
+                <h3>{{msg}}</h3>
+                <slot></slot>    
+            </div>
+        `
+    })
+    Vue.component("two", {
+        data() {
+            return {
+                msg: "我是测试vue 动画的 组件二"
+            }
+        },
+        template: `
+            <div @animationend="$emit('ani')" class="two" :style="{width:'400px',textAlign:'center',background:'#6ff'}">
+                <h3>{{msg}}</h3>
+                <slot></slot>    
+            </div>
+        `
+    })
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue_07_01 过渡  元素或组件的过渡",
+            show: true,
+            aniShow: true
+        },
+        template: `
+           <div id="app">
+                <h3>{{msg}}</h3>
+                <button @click="change">点击控制</button><br/>
+                 <div :style="{float:'left',width:'200px',height:'200px'}">
+                    <transition  appear
+                    appear-class="fade" 
+                    appear-active-class="fade-to" 
+                    appear-to-class="fade-in"
+                    v-on:before-appear="beforeAppear"
+                    enter-class="fade" enter-active-class="fade-to" enter-to-class="fade-in"
+                    leave-class="leave" leave-active-class="leave-to" leave-to-class="leave-out"
+                    >
+                        <one v-show="show">
+                            初始渲染过渡
+                        </one>
+                    </transition>
+                </div>
+                <div :style="{float:'left',width:'200px',height:'200px'}">
+                    <transition  
+                    enter-class="fade" enter-active-class="fade-to" enter-to-class="fade-in"
+                    leave-class="leave" leave-active-class="leave-to" leave-to-class="leave-out"
+                    >
+                        <one v-show="!show">
+                             我是盒子一
+                        </one>
+                    </transition>
+                </div>
+                 <div :style="{float:'left',width:'200px',height:'200px'}">
+                    <transition  :duration="{ enter: 2000, leave: 3000 }"
+                       enter-class="fade" enter-active-class="fade-to" enter-to-class="fade-in"
+                       leave-class="leave" leave-active-class="leave-to" leave-to-class="leave-out"
+                    >
+                        <one v-show="show">
+                            我是盒子二
+                        </one>
+                    </transition>
+                </div>
+           </div>
+        `,
+        methods: {
+            beforeAppear() {
+                console.log(1111111111)
+            },
+            change() {
+                this.show = !this.show;
+                console.log(this.show)
+            },
+            tell() {
+                console.log("transition||animation 完成！")
+            }
+        }
+    })
+</script>
+
+
+</html>

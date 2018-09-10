@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/lodash.js"></script>
+    <script src="../libs/js/velocity.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        li {
+            list-style: none;
+        }
+        
+        #app {
+            padding: 50px;
+        }
+        
+        #one,
+        #two {
+            height: 400px;
+        }
+        
+        #app h3 {
+            margin-bottom: 25px;
+        }
+        
+        #app p {
+            margin-bottom: 10px;
+        }
+        
+        .wrap li {
+            line-height: 40px;
+        }
+        
+        .search-enter,
+        .search-leave-to {
+            opacity: 0;
+        }
+        
+        .search-enter-active,
+        .search-leave-active {
+            opacity: 0;
+            transition: all 2s;
+        }
+        
+        .search-enter-to,
+        .search-leave {
+            opacity: 1;
+        }
+        
+        .search-leave-active {
+            position: absolute;
+        }
+        
+        .search-move {
+            transition: all 1s;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app"></div>
+
+
+</body>
+<script>
+    Vue.component("one", {
+        data() {
+            return {
+                msg: "vue_07_07 过渡 列表过渡 我的编写",
+                search: "",
+                list: [{
+                    msg: 'Bruce Lee'
+                }, {
+                    msg: 'Jackie Chan'
+                }, {
+                    msg: 'Chuck Norris'
+                }, {
+                    msg: 'Jet Li'
+                }, {
+                    msg: 'Kung Fury'
+                }]
+            }
+        },
+        template: `
+           <div id="one">
+                <h3>{{msg}}</h3>
+                <p>
+                    <input v-model="search" /><button>search</button>
+                </p>
+                <transition-group name="search" mode="in-out" tag="ul" class="wrap">
+                    <li v-if="item.msg.toLowerCase().indexOf(search.toLowerCase())!=-1"  v-for="item in list" :key="item.msg">
+                        {{item.msg}}
+                    </li>
+                </transition-group>
+           </div>
+        `
+    });
+
+    Vue.component("two", {
+        data() {
+            return {
+                msg: "vue_07_07 过渡 列表过渡  官方案例",
+                search: "",
+                list: [{
+                    msg: 'Bruce Lee'
+                }, {
+                    msg: 'Jackie Chan'
+                }, {
+                    msg: 'Chuck Norris'
+                }, {
+                    msg: 'Jet Li'
+                }, {
+                    msg: 'Kung Fury'
+                }]
+            }
+        },
+        template: `
+           <div id="two">
+                <h3>{{msg}}</h3>
+                <p>
+                    <input v-model="search" /><button>search</button>
+                </p>
+                 <transition-group  mode="in-out" tag="ul" class="wrap"
+
+                    @before-enter="beforeEnter"
+                    @enter="enter"
+                    @leave="leave"
+                 >
+                    <li v-for="(item,index) in computedList" :data-msg="item.msg" :data-index="index" :key="item.msg">
+                        {{item.msg}}
+                    </li>
+                </transition-group>
+           </div>
+        `,
+        computed: {
+            computedList() {
+                var that = this;
+                return this.list.filter(function(item, index) {
+                    return item.msg.toLowerCase().indexOf(that.search.toLowerCase()) != -1
+                })
+            }
+        },
+        methods: {
+            beforeEnter(el) {
+                el.style.opacity = "0";
+                el.style.height = "0";
+            },
+            enter(el, done) {
+                // el.dataset.index || el.dataset.msg  用来获取 H5 中 自定义属性的数据  
+                // 例如 设置  el.setAttribute("data-id",0)  获取 li.dataset.id==0
+                console.log(el.dataset.index, el.dataset.msg)
+                var delay = el.dataset.index * 125;
+                setTimeout(function() {
+                    Velocity(el, {
+                        opacity: 1,
+                        height: '40px'
+                    }, {
+                        complete: done
+                    }, delay)
+                }, delay)
+
+            },
+            leave(el, done) {
+                var delay = el.dataset.index;
+                setTimeout(function() {
+                    Velocity(el, {
+                        opacity: 0,
+                        height: 0
+                    }, {
+                        complete: done
+                    })
+                }, delay)
+            }
+
+
+        }
+    });
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue_07_09 过渡 列表过渡 "
+        },
+        template: `
+           <div id="app">
+                <h3>{{msg}}</h3>
+                <one></one>
+                <two></two>
+           </div>
+        `,
+        methods: {
+            random() {
+                //  _.shuffle (lodash方法) 创建一个被打乱值的集合 。
+                this.dataList = _.shuffle(this.dataList);
+            }
+        }
+    });
+</script>
+
+
+</html>
