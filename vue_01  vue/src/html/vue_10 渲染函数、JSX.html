@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue自定义指令</title>
+    <script src="../libs/js/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <button @click="level=1">1</button>
+        <button @click="level=2">2</button>
+        <button @click="level=3">3</button>
+        <button @click="level=4">4</button>
+        <button @click="level=5">5</button>
+        <anchored-heading :level="level">
+            <!-- <h1> -->
+            <a name="hello-world" href="#hello-world">
+                    Hello world!
+                </a>
+            <!-- </h1> -->
+        </anchored-heading>
+
+    </div>
+    <div id="example">
+
+    </div>
+</body>
+<!-- <script type="text/x-template" id="hello-component">
+
+    <h1 v-if='level==1'>
+        <slot></slot>
+    </h1>
+    <h2 v-else-if='level==2'>
+        <slot></slot>
+    </h2>
+    <h3 v-else-if='level==3'>
+        <slot></slot>
+    </h3>
+    <h4 v-else-if='level==4'>
+        <slot></slot>
+    </h4>
+    <h5 v-else-if='level==5'>
+        <slot></slot>
+    </h5>
+
+</script> -->
+<script>
+    //  js template 引入
+    // Vue.component("anchored-heading", {
+    //     template: `#hello-component`,
+    //     props: ["level"]
+    // })
+
+    // Vue render（） 方法
+    // Vue.component("anchored-heading", {
+    //     render(createElement) {
+    //         // console.log(this) 
+
+    //         return createElement(
+    //             "h" + this.level, //tag name 标签名称
+    //             this.$slots.default //子组件中的阵列
+    //         )
+    //     },
+    //     props: ["level"]
+    // })
+
+    // 深入测试data
+    Vue.component("anchored-heading", {
+        render(createElement) {
+            console.log(this.level)
+            return createElement("h" + this.level, {
+                class: {
+                    test: true,
+                        mySpan: true
+                },
+                id: {
+                    span: true
+                },
+                style: {
+                    color: "#6ff",
+
+                },
+                props: ["level"],
+                domProps: {
+                    innerHTML: ` <a name="hello-world" href="#hello-world">
+                                Hello world!
+                            </a>`
+                }
+
+            })
+        },
+        props: ["level"]
+    })
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            level: 1
+        }
+    })
+</script>
+
+</html>

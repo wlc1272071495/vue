@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue自定义指令</title>
+    <script src="../libs/js/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <h3>{{msg}}</h3>
+        <input type="text" v-model="inp">输出：<span>{{inp|dataChange}}</span>
+        <br />
+        <input type="text" v-model="inp">输出：<span id="span" :text="inp|dataChange">{{inp|reverse}}</span>
+
+    </div>
+
+</body>
+
+<script>
+    // 全局过滤器
+    Vue.filter("reverse", function(value) {
+        if (!value) {
+            return "";
+        } else {
+            return value.split("").reverse().join("");
+        }
+    })
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue 过滤器 测试",
+            inp: "",
+            text: ""
+        },
+        filters: {
+            dataChange(value) { //组件的选项中定义本地的过滤器：
+                if (!value) {
+                    return ""
+                } else {
+                    if (isNaN(value)) {
+                        return value.toUpperCase();
+                    } else {
+                        return value * 10;
+                    }
+                }
+            }
+        }
+    })
+</script>
+
+</html>

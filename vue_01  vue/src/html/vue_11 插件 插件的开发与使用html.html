@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue自定义指令</title>
+    <script src="../libs/js/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+
+    </div>
+    <div id="example">
+
+    </div>
+</body>
+
+<script>
+    // 自定义插件
+    var MyPlugin = {};
+    MyPlugin.install = function(Vue, options) {
+        Vue.myGlobalMethod = function() {
+            return {
+                name: "wlc",
+                age: 18
+            }
+        }
+        Vue.directive("focus", {
+            inserted(el) {
+                el.focus();
+            }
+        })
+        Vue.mixin({
+            data() {
+                return {
+                    default: "Vue 全局混入测试"
+                }
+            },
+            methods: {
+                tell() {
+                    console.log(this.default)
+                }
+            },
+            created() {
+                console.log(this.$options)
+            }
+        })
+        Vue.prototype.say = function() {
+            console.log(options)
+            console.log(this)
+        }
+
+    };
+    // 调用 `MyPlugin.install(Vue)` ;
+    // Vue.use 会自动阻止多次注册相同插件，届时只会注册一次该插件。
+
+    //     Vue.js 官方提供的一些插件(例如 vue - router) 在检测到 Vue 是可访问的全局变量时会自动调用 Vue.use() 。然而在例如 CommonJS 的模块环境中，你应该始终显式地调用 
+    Vue.use(MyPlugin, {
+        someOption: true
+    })
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue_11 插件 插件的开发与使用html",
+        },
+        template: `
+            <div id="app">
+                {{msg}}
+                <input v-focus />  
+            </div>
+        `,
+        created() {
+            console.log(this)
+            console.log(Vue.myGlobalMethod())
+        }
+    })
+</script>
+
+</html>
