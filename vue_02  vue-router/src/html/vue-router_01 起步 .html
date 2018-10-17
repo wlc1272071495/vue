@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue-router 起步</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/vue-router.js"></script>
+</head>
+
+<body>
+    <div id="app">
+
+    </div>
+</body>
+<script>
+    // 0. 如果使用模块化机制编程，导入Vue和VueRouter，要调用 Vue.use(VueRouter)
+
+    // import Vue from "vue";
+    // import VueRouter from "vue-router";
+    // Vue.use(VueRouter);
+
+
+    // 1. 定义 (路由) 组件。
+    // 可以从其他文件 import 进来
+    // var home = require("./home.vue");  ||   import home from "./home.vue"; 
+    var Home = {
+        data() {
+            return {
+                msg: "I`m Home Page"
+            }
+        },
+        template: `
+            <h3>
+                {{msg}}
+            </h3>
+            `
+    }
+    var Goods = {
+        data() {
+            return {
+                msg: "I`m Goods Page"
+            }
+        },
+        template: `
+            <h3>
+                {{msg}}
+            </h3>
+            `
+    }
+    var Foo = {
+        data() {
+            return {
+                msg: "I`m Foo Page"
+            }
+        },
+        template: `
+            <h3>
+                {{msg}}
+            </h3>
+            `
+    };
+
+    // 2. 定义路由
+    // 每个路由应该映射一个组件。 其中"component" 可以是通过 Vue.extend() 创建的组件构造器，
+    // 或者，只是一个组件配置对象。
+    // 我们晚点再讨论嵌套路由。
+    var routes = [{
+            path: "/",
+            component: Home
+        }, {
+            path: "/home",
+            component: Home
+        }, {
+            path: "/goods",
+            component: Goods
+        }, {
+            path: "/foo",
+            component: Foo
+        }
+
+    ];
+    // 3. 创建 router 实例，然后传 `routes` 配置
+    // 你还可以传别的配置参数, 不过先这么简单着吧。
+    var router = new VueRouter({
+        routes
+    })
+
+    // 4. 创建和挂载根实例。
+    // 记得要通过 router 配置参数注入路由，
+    // 从而让整个应用都有路由功能
+
+
+    // 通过注入路由器，我们可以在任何组件内通过 this.$router 访问路由器，也可以通过 this.$route 访问当前路由：
+    // 留意一下 this.$router 和 router 使用起来完全一样。我们使用 this.$router 的原因是我们并不想在每个独立需要封装路由的组件中都导入路由。
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue-router 测试"
+        },
+        template: `
+            <div id="app">
+                <h3>{{msg}}</h3>
+                <p>
+                    <!-- 使用 router-link 组件来导航. -->
+                    <!-- 通过传入 to  属性指定链接. -->
+                     <!-- 通过传入 tag  属性指定<router-link>渲染之后的标签. -->
+                    <!-- <router-link> 默认会被渲染成一个  < a >  标签 -->
+                    <router-link to="/home?name=111&age=18#test" tag="span">首页</router-link>
+                    <router-link to="/goods">商品列表</router-link>
+                    <router-link to="/foo">信息</router-link>
+                </p>
+                <!-- 路由出口 -->
+                <!-- 路由匹配到的组件将渲染在这里 -->
+                <router-view></router-view>
+            </div>
+        `,
+        router
+    })
+</script>
+
+</html>

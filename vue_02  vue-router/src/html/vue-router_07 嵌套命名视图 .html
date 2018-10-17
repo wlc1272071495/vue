@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue-router 起步</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/vue-router.js"></script>
+</head>
+
+
+<body>
+    <div id="app">
+        <h3>{{msg}}</h3>
+        <router-link to="/home"></router-link>
+        <router-view></router-view>
+    </div>
+</body>
+<script>
+    //普通视图需要使用component
+    // var routes = [{
+    //     path: "/",
+    //     component:User
+    //     }
+    // }]
+    //命名视图需要使用components
+    // var routes = [{
+    //     path: "/",
+    //     components: { //命名视图需要使用components
+    //         default: Home,
+    //         goods: Goods,
+    //         user: User
+    //     }
+    // }]
+    var Head = {
+        data() {
+            return {
+
+            }
+        },
+        template: `
+        <div>
+            我是  Head   部分
+        </div>
+        `,
+        created() {
+            console.log(this.$route)
+        }
+    }
+    var Body = {
+        data() {
+            return {
+
+            }
+        },
+        template: `
+        <div>
+            我是  Body   部分
+        </div>
+        `
+    }
+    var Foot = {
+        data() {
+            return {
+
+            }
+        },
+        template: `
+        <div>
+            我是  Foot   部分
+        </div>
+        `
+    }
+    var Home = {
+        data() {
+            return {
+                // user:this.$route
+            }
+        },
+        template: `
+            <div class="home">
+                <h3>Home page</h3>
+                <p>
+                    <router-link to="/home/head">Home Head</router-link>
+                    <router-link to="/home/body">Home Body</router-link>
+                    <router-link to="/home/foot">Home Foot</router-link>
+                </p>
+                 <router-view></router-view>
+                 <router-view name="body"></router-view>
+            </div>
+        `
+    };
+
+
+
+
+
+    var routes = [{
+        path: "/",
+        component: Home,
+        // children: [{
+        //     path: "",
+        //     component: Head
+        // }]
+    }, {
+        path: "/home",
+        component: Home,
+        children: [{
+            path: "",
+            component: Head
+        }, {
+            path: "head",
+            components: {
+                default: Head,
+                body: Body
+            }
+        }, {
+            path: "body",
+            component: Body
+        }, , {
+            path: "foot",
+            component: Body
+        }]
+    }]
+    const router = new VueRouter({
+        routes
+    })
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "Vue 嵌套路由"
+        },
+        router
+
+    })
+</script>
+
+</html>

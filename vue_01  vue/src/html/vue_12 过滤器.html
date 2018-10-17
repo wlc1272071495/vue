@@ -14,7 +14,8 @@
         <h3>{{msg}}</h3>
         <input type="text" v-model="inp">输出：<span>{{inp|dataChange}}</span>
         <br />
-        <input type="text" v-model="inp">输出：<span id="span" :text="inp|dataChange">{{inp|reverse}}</span>
+        <!-- v-text="inp" -->
+        <input type="text" v-model="inp">输出：<span id="span">{{inp|reverse}}</span>
 
     </div>
 

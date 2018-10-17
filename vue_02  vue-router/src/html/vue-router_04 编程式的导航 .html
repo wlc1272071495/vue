@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue-router 起步</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/vue-router.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <h3>{{msg}}</h3>
+        <button @click="$router.go(-1)">后退</button>
+        <button @click="$router.go(1)">前进</button>
+        <p>
+            <router-link to="/home">主页</router-link>
+            <router-link to="/goods">商品</router-link>
+            <router-link to="/user">用户</router-link>
+            <!-- <router-link :to="{name: 'index',query:{age:18,name:111}} ">主页</router-link> -->
+        </p>
+
+        <router-view></router-view>
+
+        <div>
+            <h3 :style="{background:'gray'}">router.push</h3>
+            <span @click="$router.push('home')">home</span>
+            <span @click="$router.push('goods')">goods</span>
+            <span @click="$router.push('user')">user</span>
+        </div>
+        <div>
+            <h3 :style="{background:'gray'}">router.replace</h3>
+            <span @click=" $router.replace( 'home') ">home</span>
+            <span @click="$router.replace( 'goods') ">goods</span>
+            <span @click="$router.replace( 'user') ">user</span>
+        </div>
+
+    </div>
+</body>
+<script>
+    var Head = {
+        data() {
+            return {
+
+            }
+        },
+        template: `
+        <div>
+            我是  Head   部分
+        </div>
+        `,
+        created() {
+            console.log(this.$route)
+        }
+    }
+    var Body = {
+        data() {
+            return {
+
+            }
+        },
+        template: `
+        <div>
+            我是  Body   部分
+        </div>
+        `
+    }
+    var Foot = {
+        data() {
+            return {
+
+            }
+        },
+        template: `
+        <div>
+            我是  Foot   部分
+        </div>
+        `
+    }
+    var Home = {
+        data() {
+            return {
+                // user:this.$route
+            }
+        },
+        template: `
+            <div class="home ">
+                <h3>Home page</h3>
+                <p>
+                    <router-link to="/home/head">Home Head</router-link>
+                    <router-link to="/home/body">Home Body</router-link>
+                    <router-link to="/home/foot">Home Foot</router-link>
+                </p>
+                 <router-view></router-view>
+            </div>
+        `
+    };
+    var User = {
+        data() {
+            return {
+                // user:this.$route
+            }
+        },
+        template: `
+            <div class="user ">
+                <h3>User page</h3>
+                <p>
+                    <router-link to="/user/head">User Head</router-link>
+                    <router-link to="/user/body">User Body</router-link>
+                    <router-link to="/user/foot">User Foot</router-link>
+                </p>
+                 <router-view></router-view>
+            </div>
+        `
+    }
+
+    var Goods = {
+        data() {
+            return {
+                // user:this.$route
+            }
+        },
+        template: `
+            <div class="goods ">
+                <h3>Goods page</h3>
+                 <p>
+                    <router-link to="/goods/head">Goods Head</router-link>
+                    <router-link to="/goods/body">Goods Body</router-link>
+                    <router-link to="/goods/foot">Goods Foot</router-link>
+                </p>
+                 <router-view></router-view>
+            </div>
+        `
+    }
+
+
+    var routes = [{
+        path: "/",
+        component: Home,
+        children: [{
+            path: "",
+            component: Head
+        }, {
+            path: "head",
+            component: Head
+        }, {
+            path: "body",
+            component: Body
+        }, {
+            path: "foot",
+            component: Foot
+        }]
+
+    }, {
+        name: "index",
+        path: "/home",
+        meta: {},
+        component: Home,
+        children: [{
+            path: "",
+            component: Head
+        }, {
+            path: "head",
+            component: Head
+        }, {
+            path: "body",
+            component: Body
+        }, {
+            path: "foot",
+            component: Foot
+        }]
+    }, {
+        path: "/goods",
+        component: Goods,
+        children: [{
+            path: "",
+            component: Head
+        }, {
+            path: "head",
+            component: Head
+        }, {
+            path: "body",
+            component: Body
+        }, {
+            path: "foot",
+            component: Foot
+        }]
+    }, {
+        path: "/user",
+        component: User,
+        children: [{
+            path: "",
+            component: Head
+        }, {
+            path: "head",
+            component: Head
+        }, {
+            path: "body",
+            component: Body
+        }, {
+            path: "foot",
+            component: Foot
+        }]
+    }]
+    const router = new VueRouter({
+        routes
+    })
+    var vm = new Vue({
+        el: "#app ",
+        data: {
+            msg: "Vue 嵌套路由 "
+        },
+        router
+
+    })
+</script>
+
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue-router 起步</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/vue-router.js"></script>
+</head>
+
+<body>
+    <div id="app">
+
+    </div>
+</body>
+<script>
+    var User = {
+        data() {
+            console.log(this.$route)
+            return {
+                name: this.$route.params.name
+            }
+        },
+        template: `
+            <div class="user">
+                this is user page  -----  name---> {{$route.params.name}}
+            </div>
+        `,
+        beforeRouteUpdate(to, from, next) {
+            console.log(to, from)
+        }
+    }
+
+    var routes = [{
+        path: "/",
+        component: User
+    }, {
+        path: "/user/:name",
+        component: User
+    }]
+
+    var router = new VueRouter({
+        routes
+    })
+
+    // 当使用路由参数时，例如从 /user/wlc 导航到 /user/lulu，原来的组件实例会被复用。因为两个路由都渲染同个组件，比起销毁再创建，复用则显得更加高效。不过，这也意味着组件的生命周期钩子不会再被调用。
+    // 复用组件时，想对路由参数的变化作出响应的话，你可以简单地 watch (监测变化) $route 对象：
+
+    // 或者使用 2.2 中引入的 beforeRouteUpdate 导航守卫：    // don't forget to call next()
+    var vm = new Vue({
+        el: "#app",
+        template: `
+            <div id="app">
+                <h3>Vue 动态路由</h3>
+                <div>
+                    <router-link  to="/user/wlc">wlc</router-link>
+                    <router-link to="/user/lulu">lulu</router-link>
+                    <router-link to="/user/lili">lili</router-link>
+                </div> 
+                <router-view></router-view>
+            </div>
+        `,
+        router,
+        // watch:{
+        //     "$route"(to,from){
+        //         // from 之前的路由参数 $route
+        //         // to 现在的路由参数 $route
+        //         console.log(to,from)
+        //     }
+        // },
+        beforeRouteUpdate(to, from, next) {
+            console.log(to, from)
+        }
+    })
+</script>
+
+</html>

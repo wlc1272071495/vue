@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue-router 起步</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/vue-router.js"></script>
+</head>
+
+
+<body>
+    <div id="app">
+        <h3>{{msg}}</h3>
+        <router-link to="/home/test"></router-link>
+        <router-view></router-view>
+    </div>
+</body>
+<script>
+    var Head = {
+        data() {
+            return {
+
+            }
+        },
+        template: `
+        <div>
+            我是  Head   部分
+        </div>
+        `,
+        created() {
+            console.log(this.$route)
+        }
+    };
+    var Body = {
+        data() {
+            return {
+
+            }
+        },
+        template: `
+        <div>
+            我是  Body   部分
+        </div>
+        `
+    };
+    var Foot = {
+        data() {
+            return {
+
+            }
+        },
+        template: `
+        <div>
+            我是  Foot   部分
+        </div>
+        `
+    }
+    var Home = {
+        data() {
+            return {
+
+            }
+        },
+        props: ["id"],
+        template: `
+            <div class="home">
+                <h3>Home page -------- {{id}}</h3>
+                <p>
+                    <router-link to="/home/1/head">Home Head</router-link>
+                    <router-link to="/home/2/body">Home Body</router-link>
+                    <router-link to="/home/3/foot">Home Foot</router-link>
+                </p>
+                 <router-view></router-view>
+                 <router-view name="body"></router-view>
+            </div>
+        `
+    };
+    var User = {
+        data() {
+            return {
+
+            }
+        },
+        props: ["id"],
+        template: `
+            <div class="user ">
+                <h3>User page -------- {{id}}</h3>
+                <p>
+                    <router-link to="/user/w/head">User Head</router-link>
+                    <router-link to="/user/l/body">User Body</router-link>
+                    <router-link to="/user/c/foot">User Foot</router-link>
+                </p>
+                 <router-view></router-view>
+            </div>
+        `
+    }
+
+
+
+
+
+    var routes = [{
+        path: "/",
+        redirect: "/home/1" //重定向
+    }, {
+        path: "/one",
+        redirect(to) {
+            // console.log(to);
+            return {
+                name: "header"
+            }
+            // return "/home";
+        }
+    }, {
+        path: "/user",
+        redirect(to) {
+            // console.log(to);
+            // return {
+            //     name: "header"
+            // }
+            return "/user/1";
+        }
+    }, {
+        path: "/home",
+        redirect(to) {
+            // console.log(to);
+            // return {
+            //     name: "header"
+            // }
+            return "/home/1";
+        }
+    }, {
+        path: "/home/:id",
+        component: Home,
+        props: true,
+        // name: "index",
+        // 命名路由'index'具有默认子路由。导航到此命名路由（：to =“{name：'index'”）时，将不会呈现默认子路由。从此路由中删除名称，并使用命名链接的默认子路由的名称。
+        children: [{
+            path: "",
+            component: Head
+        }, {
+            path: "head",
+            components: {
+                default: Head,
+                body: Body
+            },
+            name: "header",
+            alias: "hh"
+        }, {
+            path: "body",
+            component: Body,
+            name: "body",
+            alias: "bb"
+        }, , {
+            path: "foot",
+            component: Body,
+            name: "footer",
+            alias: "ff"
+        }]
+    }, {
+        path: "/user/:id",
+        component: User,
+        props: true,
+        // name: "userinfo",
+        children: [{
+            path: "",
+            component: Head
+        }, {
+            path: "head",
+            components: {
+                default: Head,
+                body: Body
+            }
+        }, {
+            path: "body",
+            component: Body
+        }, , {
+            path: "foot",
+            component: Body
+        }]
+    }]
+    const router = new VueRouter({
+        routes
+    })
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "Vue 嵌套路由"
+        },
+        router
+
+    })
+</script>
+
+</html>
