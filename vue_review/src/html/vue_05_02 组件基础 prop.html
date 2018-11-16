@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <my-goods v-for="(goods,index) in dataList" title="静态传值_测试" :goods="goods" :key="index"></my-goods>
+    </div>
+</body>
+<script>
+    //  传值要求参考    https://cn.vuejs.org/v2/guide/components-props.html
+
+    // 如果你想要将一个对象的所有属性都作为 prop 传入，你可以使用不带参数的 v-bind (取代 v-bind:prop-name)。例如，对于一个给定的对象 goods 传统传值方式  v-bind:goods="goods"  可以省略为  v-bind="goods"
+    Vue.component("myGoods", {
+        props: ["title", "goods"],
+        //title为静态传值(静态传值时只能为纯字符串,其他类型诸如：数字，boolean，array,Object，即便为静态数值，最好改为动态传值v-bind ,原因(我们想要传入的是 JavaScript 表达式而不是一个字符串))，
+        // goods为动态传值（变量）
+        template: `
+            <div class="goods">
+                <h2>{{title}}</h2>
+                <a>{{goods.id}}</a>
+                <a>{{goods.goodsName}}</a>
+                <a>{{goods.goodsPrice}}</a>
+                <a>{{goods.goodsNum}}</a>
+            </div> 
+        `,
+        mounted() {
+            console.log(this)
+        }
+    })
+
+    Vue.component("blogPost", {
+        data() {
+            return {
+                msg: "组件传值测试"
+            }
+        },
+        props: ["likes", "isPublished", "isChecked"],
+        template: `
+            <div>
+               <p v-if="likes">
+                   {{msg}} --- {{likes}}
+               </p>
+              
+            </div>
+        `
+    })
+
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "组件基础",
+            dataList: [{
+                id: "A001",
+                goodsName: "一加耳机",
+                goodsPrice: 199,
+                goodsNum: 2
+            }, {
+                id: "A002",
+                goodsName: "一加手机壳",
+                goodsPrice: 99,
+                goodsNum: 3
+            }, {
+                id: "A003",
+                goodsName: "一加6 手机",
+                goodsPrice: 3599,
+                goodsNum: 5
+            }],
+            post: {
+                likes: 42
+            },
+            isChecked: false
+        }
+    })
+</script>
+
+</html>

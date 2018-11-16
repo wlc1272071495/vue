@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        html,
+        body,
+        #app,
+        .wrapBox {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .wrapBox {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        header,
+        footer {
+            height: 50px;
+            background: gray;
+            text-align: center;
+            line-height: 50px;
+        }
+        
+        main {
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <!-- template 具名 -->
+        <!-- <my-com>
+            <template slot="header">
+                <a>{{msg}}</a>
+            </template>
+            <template>
+                我是main
+            </template>
+            <template slot="footer">
+                我是footer
+            </template>
+        </my-com> -->
+
+        <!-- 标签具名 -->
+        <my-com>
+            <a slot="header">{{msg}}</a>
+            <p>我是main</p>
+            <a slot="footer" href="javascript:;">我是footer</a>
+        </my-com>
+
+
+
+    </div>
+</body>
+<script>
+    var myCom = {
+        template: `
+            <div class="wrapBox">
+                <header>
+                    <!--   默认内容   -->
+                    <slot name="header">header</slot>
+                </header>
+                <main>
+                     <slot>main</slot>
+                </main>
+                <footer>
+                     <slot name="footer">footer</slot>
+                </footer>
+            </div>
+        `,
+        computed: {
+            buttonEvents() {
+                var that = this
+            }
+        }
+    }
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue_05_07 组件 具名插槽",
+
+        },
+        methods: {
+
+        },
+        components: {
+            myCom,
+        }
+    })
+</script>
+
+</html>

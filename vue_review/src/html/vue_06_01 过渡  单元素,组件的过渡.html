@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../styles/pikaday.css">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/pikaday.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0
+        }
+        
+        p {
+            width: 100px;
+            /* height: 40px; */
+            text-align: center;
+            line-height: 40px;
+            background: #4197f5;
+            overflow: hidden;
+        }
+        
+        .v-enter,
+        .v-leave-to {
+            opacity: 0;
+            height: 0;
+        }
+        
+        .v-enter-active {
+            opacity: 0;
+            height: 0;
+            transition: all 3s;
+        }
+        
+        .v-leave-active {
+            opacity: 0;
+            height: 0px;
+            transition: all 3s;
+        }
+        
+        .v-enter-to,
+        .v-leave {
+            opacity: 1;
+            height: 40px;
+        }
+        
+        #app {
+            margin: 30px;
+        }
+        
+        #app>button {
+            margin: 20px auto;
+            float: left;
+        }
+        
+        #app p {
+            clear: both;
+            float: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <button @click="isShow=!isShow" v-html="isShow?'隐藏':'显示'"></button>
+        <!-- transition 里面只能控制单个元素运动，多元素运动 需要用到 transition-group -->
+        <transition>
+            <p v-show="isShow">toggle</p>
+        </transition>
+        <!-- transition-group 多元素运动 tag:标签名 -->
+        <!-- <transition-group tag="div" class="ani">
+            <p key="1" v-show="isShow">toggle</p>
+            <p key="2" v-show="!isShow">toggle</p>
+        </transition-group> -->
+    </div>
+</body>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue_06_01 过渡  单元素,组件的过渡",
+            isShow: true
+        },
+        methods: {
+
+        }
+
+    })
+</script>
+
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h2>{{msg}}</h2>
+        <my-com>
+            点击
+        </my-com>
+        <my-page></my-page>
+    </div>
+</body>
+<script>
+    // 需求  myCom ，my-page两组间之间实现数据通信
+
+    // 1.创建了一个新的Vue实例 connCom，以后它就承担起了组件之间通信的桥梁了，也就是中央事件总线。
+    // 2、我们在myCom组件的响应点击事件的click函数中用$emit触发了一个自定义的click事件， 并传递了事件参数对象
+    // 3. 我们在my-page组件的 mounted中，监听了click, 并把传递过来的字符串参数传递给了$on监听器的回调函数，$on:监听当前实例上的自定义事件(此处当前实例为connCom)。事件可以由$emit触发，回调函数会接收所有传入事件触发函数($emit)的额外参数。
+
+    var connCom = new Vue({}) //只用来作为组建通信的桥梁，页面实例在下方vm组件
+
+    var myCom = {
+        template: `
+            <button v-on="buttonEvents">
+                <slot></slot>
+            </button>
+        `,
+        computed: {
+            buttonEvents() {
+                var that = this;
+                return Object.assign({}, this.$listeners, {
+
+                    click(e) {
+                        connCom.$emit("click", e)
+                    }
+                })
+            }
+        }
+    }
+
+    var myPage = {
+        data() {
+            return {
+                msg: "我是子组件myPage",
+                count: 0
+            }
+        },
+        components: {
+            myCom,
+            // connCom
+        },
+        template: `
+        <div class="mypage">
+            <p>{{msg}}</p>
+            <span>计数：{{count}}</span>
+            <my-com >
+                点击
+            </my-com>
+        </div>
+            
+        `,
+        methods: {
+            fn() {
+                // this.count++;
+            }
+        },
+        watch: {
+            count(newValue, oldValue) {
+                // console.log(newValue, oldValue)
+
+                // if (newValue != oldValue) {
+                //     this.$emit("click",)
+                // }
+            }
+        },
+        mounted() {
+            // console.log(connCom);
+
+            var that = this;
+            connCom.$on("click", function(msg) {
+                console.log(msg)
+                that.count++;
+            })
+        },
+    }
+
+
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue_05_07 组件 插槽",
+        },
+        methods: {
+
+        },
+        components: {
+            myCom,
+            myPage
+        }
+    })
+</script>
+
+</html>

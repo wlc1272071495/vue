@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../styles/pikaday.css">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <!-- <script src="../libs/js/pikaday.js"></script> -->
+    <!-- <script src="../libs/js/velocity.js"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script> -->
+    <style>
+        * {
+            padding: 0;
+            margin: 0
+        }
+        
+        #app {
+            padding: 100px;
+        }
+        
+        button {}
+        
+        .btn-enter,
+        .btn-leave-to {
+            opacity: 0;
+        }
+        
+        .btn-enter-active,
+        .btn-leave-active {
+            opacity: 0;
+            transition: all .5s;
+        }
+        
+        .btn-enter-to,
+        .btn-leave {
+            opacity: 1;
+        }
+        /* #app>* {
+            margin: 10px;
+        } */
+        
+        div {
+            position: relative;
+            height: 40px;
+        }
+        
+        .two button {
+            position: absolute;
+            left: 0;
+            width: 30px;
+            height: 20px;
+        }
+        
+        .move-enter,
+        .move-leave-to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        
+        .move-enter-active,
+        .move-leave-active {
+            transition: all .5s;
+        }
+        /* .move-leave-active {
+            transition: all .5s 1s;
+        } */
+        
+        .move-enter-to,
+        .move-leave {
+            opacity: 1;
+            transform: translateX(0px)
+        }
+        
+        .move-leave-to {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        
+        .three {
+            height: 40px;
+            position: relative;
+        }
+        
+        .three button {
+            position: absolute;
+            width: 30px;
+            height: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!--mode只适用于一个transition内的同标签切换-->
+    <div id="app">
+        <h2>{{msg}}</h2>
+        <p>不加key值：</p>
+        <transition name="btn">
+            <button @click="isShow=!isShow" v-if="isShow">on</button>
+            <button @click="isShow=!isShow" v-else>off</button>
+        </transition><br/>
+        <span>
+            加key值：
+        </span>
+        <transition-group name="btn" tag="div" class="one">
+            <button key="b1" @click="isShow=!isShow" v-if="isShow">on</button>
+            <button key="b2" @click="isShow=!isShow" v-else>off</button>
+        </transition-group>
+        <span>
+            加定位
+        </span>
+        <transition-group name="btn" tag="div" class="two">
+            <button key="a1" @click="isShow=!isShow" v-if="isShow">on</button>
+            <button key="a2" @click="isShow=!isShow" v-else>off</button>
+        </transition-group>
+        <span>
+            加定位，translate
+        </span>
+        <transition-group name="move" tag="div" class="three" @enter="enter" @after-enter="afterEnter" @leave="leave" @after-leave="afterLeave">
+            <button key="b1" @click="fn" v-if="isShow">on</button>
+            <button key="b2" @click="fn" v-else>off</button>
+        </transition-group>
+        <span>
+            加定位 和 mode
+        </span>
+        <div class="two">
+            <transition name="btn" mode="out-in" tag="div" class="two">
+                <button key="c1" @click="isShow=!isShow" v-if="isShow">on</button>
+                <button key="c2" @click="isShow=!isShow" v-else>off</button>
+            </transition>
+        </div>
+        <span>
+            加定位，translate,mode
+        </span>
+        <div class="three">
+            <p>mode只适用于一个transition内的同标签切换</p>
+            <transition name="move" mode="out-in" tag="div" class="three" @enter="enter" @after-enter="afterEnter" @leave="leave" @after-leave="afterLeave">
+                <button key="d1" @click="fn" v-if="isShow">on</button>
+                <button key="d2" @click="fn" v-else>off</button>
+            </transition>
+        </div>
+        <div class="three">
+            <p>mode只适用于一个transition内的同标签切换</p>
+            <transition name="move" mode="in-out" tag="div" class="three" @enter="enter" @after-enter="afterEnter" @leave="leave" @after-leave="afterLeave">
+                <button key="e1" @click="fn" v-if="isShow">on</button>
+                <button key="e2" @click="fn" v-else>off</button>
+            </transition>
+        </div>
+    </div>
+</body>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue_06_01 过渡  多元素过渡",
+            isShow: true,
+        },
+        methods: {
+            fn(e) {
+                // console.log(e.target.isAni)
+                if (!e.target.isAni) {
+                    this.$emit("isShow")
+                }
+            },
+            enter(el) {
+                el.isAni = true;
+            },
+            afterEnter(el) {
+                el.isAni = false;
+            },
+            leave(el) {
+                el.isAni = true;
+            },
+            afterLeave(el) {
+                el.isAni = false;
+            }
+        },
+        mounted() {
+            var that = this;
+            this.$on("isShow", function() {
+                // console.log(this == vm)
+                this.isShow = !this.isShow;
+            })
+        }
+
+    })
+</script>
+
+</html>

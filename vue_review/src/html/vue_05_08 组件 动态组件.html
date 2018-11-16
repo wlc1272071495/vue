@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        li {
+            list-style: none;
+        }
+        
+        #app>* {
+            width: 300px;
+            ff0000
+        }
+        
+        #app ul {
+            display: flex;
+        }
+        
+        #app ul li {
+            flex: 1;
+            border: 1px solid;
+            text-align: center;
+            line-height: 30px;
+        }
+        
+        .active {
+            background: #ff0000;
+        }
+        
+        .myCom {
+            height: 200px;
+            border: 1px solid;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h2>{{msg}}</h2><br/>
+        <ul>
+            <li @click="nowCom='comOne'" :class="{active:(nowCom=='comOne')}">comOne</li>
+            <li @click="nowCom='comTwo'" :class="{active:(nowCom=='comTwo')}">comTwo</li>
+            <li @click="nowCom='comThree'" :class="{active:(nowCom=='comThree')}">comThree</li>
+        </ul>
+        <!-- 每次切换 计数清零  -->
+        <!-- <component :is="nowCom"></component> -->
+        <!-- 每次切换 组件保持切换之前的状态  -->
+        <keep-alive>
+            <component :is="nowCom"></component>
+        </keep-alive>
+    </div>
+</body>
+<script>
+    var comOne = {
+        data() {
+            return {
+                msg: "我是组件comOne",
+                count: 0
+            }
+        },
+        template: `
+            <div class="myCom">
+                <h4>{{msg}}</h4>
+                <p>计数：{{count}}</p>
+                <button @click="count++">点击</button>
+             </div>
+        `,
+    }
+    var comTwo = {
+        data() {
+            return {
+                msg: "我是组件comTwo",
+                count: 0
+            }
+        },
+        template: `
+            <div class="myCom">
+                <h4>{{msg}}</h4>
+                <p>计数：{{count}}</p>
+                <button @click="count++">点击</button>
+             </div>
+        `,
+    }
+    var comThree = {
+        data() {
+            return {
+                msg: "我是组件comThree",
+                count: 0
+            }
+        },
+        template: `
+            <div class="myCom">
+                <h4>{{msg}}</h4>
+                <p>计数：{{count}}</p>
+                <button @click="count++">点击</button>
+             </div>
+        `,
+    }
+
+
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue_05_07 组件 动态组件",
+            nowCom: "comOne"
+        },
+        methods: {
+
+        },
+        components: {
+            comOne,
+            comTwo,
+            comThree
+        }
+    })
+</script>
+
+</html>

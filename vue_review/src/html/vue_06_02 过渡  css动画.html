@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../styles/pikaday.css">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/pikaday.js"></script>
+    <!-- <script src="../libs/js/velocity.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0
+        }
+        
+        #app {
+            padding: 100px;
+        }
+        
+        #app>* {
+            margin: 10px;
+        }
+        
+        p {
+            width: 300px;
+            opacity: 0;
+            word-break: break-all;
+            transform: scale(0);
+            /* animation: Ani 2s 0.5s ease-in-out; */
+        }
+        /* .ani-enter,
+        .ani-leave-to {
+            transform: scale(1);
+        }
+        
+        .ani-enter-active {
+            animation: Ani 2s ease-in-out;
+        }
+        
+        .ani-leave-active {
+            animation: Ani 2s .5s ease-in-out reverse;
+        } */
+        
+        @keyframes Ani {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.5);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h2>{{msg}}</h2>
+        <button @click="isShow=!isShow">toggle-font</button>
+        <transition name="ani" :duration="{enter:2000,leave:2000}" @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter" @enter-cancelled="enterCancelLed" @leave="leave">
+            <p v-if="!isShow" @animationend="fn">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis enim libero, at lacinia diam fermentum id. Pellentesque habitant morbi tristique senectus et netus.
+            </p>
+        </transition>
+    </div>
+</body>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue_06_01 过渡  css动画",
+            isShow: true,
+            isOver: false
+        },
+        methods: {
+            fn() {
+                this.isOver = true;
+                // console.log(11111)
+                this.$emit("ani", "yaho")
+            },
+            beforeEnter: (el) => {
+                el.style.opacity = 0
+                el.style.transformOrigin = 'left'
+                console.log("ani beforeenter");
+            },
+            enter: (el, done) => {
+                console.log("ani enter");
+                Velocity(el, {
+                    opacity: 1,
+                    scale: 1.5,
+                    fontSize: "1.2rem"
+                }, {
+                    duration: 300
+                })
+                Velocity(el, {
+                    fontSize: "1rem",
+                    scale: 1
+                }, {
+                    complete: done
+                });
+                // console.log(el, done)
+                // console.log("ani enter");
+
+            },
+            afterEnter: (el) => {
+                // console.log(el)
+                console.log("ani afterEnter")
+            },
+            enterCancelLed: (el, done) => {
+                // console.log(el)
+                console.log("ani enterCancelLed")
+            },
+            leave(el, done) {
+                console.log("leave->>>>>")
+                Velocity(el, {
+                    translateX: '15px',
+                    rotateZ: '50deg'
+                }, {
+                    duration: 600
+                })
+                Velocity(el, {
+                    rotateZ: '100deg'
+                }, {
+                    loop: 2
+                })
+                Velocity(el, {
+                    rotateZ: '45deg',
+                    translateY: '30px',
+                    translateX: '30px',
+                    opacity: 0
+                }, {
+                    complete: done
+                })
+            }
+        },
+        mounted() {
+            this.$on("ani", function(val) {
+                console.log("ani ok!" + val)
+            })
+        }
+
+    })
+</script>
+
+</html>

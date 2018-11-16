@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        table {
+            width: 600px;
+            border: 1px solid #ccc;
+            border-collapse: collapse;
+            text-align: center;
+        }
+        
+        table td,
+        table th {
+            border: 1px solid #ccc;
+        }
+        
+        thead>tr {
+            height: 40px;
+        }
+        
+        tbody>tr {
+            height: 60px;
+        }
+        
+        table input[type=Number] {
+            width: 40px;
+        }
+        /* 去除 input[type=Number] 的上下按键 */
+        
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h2><input type="text" v-model="msg"></h2>
+        <table>
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            <input class="check-all" @change="checkAllChange()" :checked="isChecked" type="checkbox" name="" id="">
+                        </th>
+                        <th>商品详情</th>
+                        <th>商品单价</th>
+                        <th>商品数量</th>
+                        <th>商品小计</th>
+                        <th>删除</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(goods,index) in dataList" :key="index">
+                        <td>
+                            <input type="checkbox" v-model="checkOneList" :value="goods.id" @change="checkOneChange" :checked="isChecked" class="check-one" id="">
+                        </td>
+                        <td>
+                            <p>{{goods.goodsName}}</p>
+                        </td>
+                        <td>{{goods.goodsPrice}}</td>
+                        <td>
+                            <button @click="dec(index)">-</button>
+                            <input type="number" :value.number="goods.goodsNum">
+                            <button @click="add(index)">+</button>
+                        </td>
+                        <td>￥{{smallCount(index)}}</td>
+                        <td>
+                            <span @click="del(goods.id)"> 删除</span>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr align="left">
+                        <td>
+                            <input @change="checkAllChange()" :checked="isChecked" type="checkbox" class="check-all" name="" id="">
+                        </td>
+                        <td>删除</td>
+                        <td></td>
+                        <td>商品{{allNum()==0?"":allNum()}}</td>
+                        <td>总计{{allAccount()==0?"":allAccount()}}</td>
+                        <td align="center">结算</td>
+                    </tr>
+                </tfoot>
+            </table>
+
+        </table>
+    </div>
+</body>
+<script>
+    // vue_04事件绑定_购物车
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue_04事件绑定_购物车",
+            dataList: [{
+                id: "A001",
+                goodsName: "一加耳机",
+                goodsPrice: 199,
+                goodsNum: 2
+            }, {
+                id: "A002",
+                goodsName: "一加手机壳",
+                goodsPrice: 99,
+                goodsNum: 3
+            }, {
+                id: "A003",
+                goodsName: "一加6 手机",
+                goodsPrice: 3599,
+                goodsNum: 5
+            }],
+            checkOneList: [],
+            isChecked: false
+        },
+        methods: {
+            add(index) {
+                this.dataList[index].goodsNum++
+            },
+            dec(index) {
+                this.dataList[index].goodsNum--
+            },
+            del(id) {
+                console.log(id)
+                for (var i = 0; i < this.dataList.length; i++) {
+                    if (this.dataList[i].id == id) {
+                        this.dataList.splice(i, 1);
+                        var index = this.checkOneList.indexOf(id);
+                        this.checkOneList.splice(index, 1);
+                    }
+                }
+                // var index = this.checkOneList.indexOf(id);
+                // this.checkOneList.splice(index, 1)
+            },
+            smallCount(index) {
+                return this.dataList[index].goodsPrice * this.dataList[index].goodsNum;
+            },
+            checkAllChange() {
+                console.log(this.isChecked)
+                console.log(this.checkOneList)
+                if (!this.isChecked) {
+                    for (var i = 0; i < this.dataList.length; i++) {
+                        this.checkOneList.push(this.dataList[i].id);
+                    }
+                } else {
+                    this.checkOneList = [];
+                }
+                this.isChecked = !this.isChecked
+            },
+            checkOneChange() {
+                console.log(this.checkOneList)
+                if (this.checkOneList.length == this.dataList.length) {
+                    this.isChecked = true;
+                } else {
+                    this.isChecked = false;
+                }
+            },
+            allNum() {
+                var num = 0;
+                for (var i = 0; i < this.checkOneList.length; i++) {
+                    num += this.dataList[i].goodsNum;
+                }
+                return num;
+            },
+            allAccount() {
+                var num = 0;
+                for (var i = 0; i < this.checkOneList.length; i++) {
+                    num += (this.dataList[i].goodsNum * this.dataList[i].goodsPrice);
+                }
+                return num;
+            }
+
+        },
+        computed: {
+
+        },
+        watch: {
+
+        }
+
+    })
+</script>
+
+</html>

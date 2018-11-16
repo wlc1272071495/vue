@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h2>{{msg}}</h2>
+        <my-com>
+            <template slot-scope="slotProps">
+                <span>{{slotProps.goods.id}}</span>
+                <span>{{slotProps.goods.goodsName}}</span>
+                <span>{{slotProps.goods.goodsPrice}}</span>
+                <span>{{slotProps.goods.goodsNum}}</span>
+            </template>
+        </my-com>
+        <!-- slotProps结构 -->
+        <!-- <my-com>
+            <template slot-scope="{goods}">
+                <span>{{goods.id}}</span>
+                <span>{{goods.goodsName}}</span>
+                <span>{{goods.goodsPrice}}</span>
+                <span>{{goods.goodsNum}}</span>
+            </template>
+        </my-com> -->
+    </div>
+</body>
+<script>
+    var myCom = {
+        data() {
+            return {
+                dataList: [{
+                    id: "A001",
+                    goodsName: "一加耳机",
+                    goodsPrice: 199,
+                    goodsNum: 2
+                }, {
+                    id: "A002",
+                    goodsName: "一加手机壳",
+                    goodsPrice: 99,
+                    goodsNum: 3
+                }, {
+                    id: "A003",
+                    goodsName: "一加6 手机",
+                    goodsPrice: 3599,
+                    goodsNum: 5
+                }]
+            }
+        },
+        template: `
+            <div class="wrapBox">
+                <ul class="goods" v-for="(goods,index) in dataList">
+                    <slot :goods="goods"></slot>
+                </ul>
+            </div>
+        `,
+    }
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue_05_07 _4 组件 作用域插槽",
+
+        },
+        methods: {
+
+        },
+        components: {
+            myCom,
+        }
+    })
+</script>
+
+</html>

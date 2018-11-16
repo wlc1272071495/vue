@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h2>{{msg}}</h2>
+        <span>You has clicked the button for about {{count}} times</span>
+        <my-com @add="addFn"></my-com>
+        <my-crt @click="addFn">
+            增加
+        </my-crt>
+
+        <my-crt @click="decFn">
+            <template>
+                减少
+            </template>
+        </my-crt>
+    </div>
+</body>
+<script>
+    var myCom = {
+        data() {
+            return {
+
+            }
+        },
+        template: `
+            <div>
+                <button @click="$emit('add',this)">点击</button>
+            </div>
+        `
+    }
+
+    var myCrt = {
+        data() {
+            return {
+
+            }
+        },
+        template: `
+            <div>
+                <button @click="$emit('click',this)">
+                    <slot></slot>
+                </button>
+            </div>
+        `
+    }
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "自定义事件",
+            count: 0
+        },
+        methods: {
+            addFn() {
+                this.count++;
+            },
+            decFn() {
+                this.count--;
+            }
+
+        },
+        components: {
+            myCom,
+            myCrt
+        }
+    })
+</script>
+
+</html>

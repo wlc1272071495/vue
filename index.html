@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>怀霜凌志</title>
+    <style>
+        .wrapBox,
+        .wrapBox::before,
+        .wrapBox::after {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        
+        .wrapBox {
+            width: 300px;
+            height: 300px;
+            margin: auto;
+            /* background: #009a61; */
+            color: #009a96;
+        }
+        
+        .wrapBox::before,
+        .wrapBox::after {
+            content: '';
+            z-index: -1;
+            margin: -5%;
+            box-shadow: inset 0 0 0 2px;
+            animation: clipMe 8s linear infinite;
+            transition: clip 0.3s;
+        }
+        
+        .wrapBox::before {
+            animation-delay: -4s;
+            /*负值，请注意动画跳过 2 秒进入动画周期：*/
+        }
+        
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        .clockBox {
+            width: 300px;
+            height: 300px;
+            border: 1px solid;
+            border-radius: 20px;
+            background: #c6ffff;
+            box-shadow: 2px 2px 2px 2px gray;
+        }
+        
+        .dotBox {
+            width: 250px;
+            height: 250px;
+            margin: 25px auto;
+            border: 1px solid;
+            border-radius: 50%;
+            position: relative;
+            background: #fff;
+        }
+        
+        .dotBox * {
+            position: absolute;
+        }
+        
+        .dotBig {
+            width: 3px;
+            height: 10px;
+            background: #000;
+        }
+        
+        .dotBig span {
+            /* content: attr(data-attr); */
+            width: 20px;
+            height: 20px;
+            display: block;
+            position: absolute;
+            left: -10px;
+            top: 10px;
+            /* background: #335ff2; */
+            text-align: center;
+            line-height: 20px;
+            /* transform: rotate(-attr(data-rotate)) */
+        }
+        
+        .dotSmall {
+            width: 3px;
+            height: 4px;
+            background: #000;
+        }
+        
+        .hourHand,
+        .minuteHand,
+        .secondHand {
+            transform-origin: 10px center;
+            z-index: 10;
+        }
+        
+        .hourHand {
+            width: 60px;
+            height: 5px;
+            position: absolute;
+            background: #335ff2;
+            border-radius: 5px 0 0 5px;
+        }
+        
+        .hourHand:before {
+            content: "";
+            display: block;
+            position: absolute;
+            right: -24px;
+            top: -50%;
+            border: 6px solid transparent;
+            border-left-width: 18px;
+            border-left-color: #335ff2;
+        }
+        
+        .minuteHand {
+            width: 80px;
+            height: 5px;
+            position: absolute;
+            background: #fac72c;
+            border-radius: 3px 0 0 3px;
+        }
+        
+        .minuteHand::before {
+            content: "";
+            display: block;
+            position: absolute;
+            right: -20px;
+            top: -50%;
+            border: 5px solid transparent;
+            border-left-width: 15px;
+            border-left-color: #fac72c;
+        }
+        
+        .secondHand {
+            width: 100px;
+            height: 4px;
+            position: absolute;
+            background: #e93d68;
+            border-radius: 2px 0 0 2px;
+        }
+        
+        .secondHand::before {
+            content: "";
+            display: block;
+            position: absolute;
+            right: -16px;
+            top: -50%;
+            border: 4px solid transparent;
+            border-left-width: 12px;
+            border-left-color: #e93d68;
+        }
+        
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #000;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            z-index: 100;
+            transform: scale(0.8);
+        }
+        
+        @-webkit-keyframes clipMe {
+            0%,
+            100% {
+                clip: rect(0px, 330px, 3px, 0px);
+                /*设置元素的形状。唯一合法的形状值是：rect (top, right, bottom, left)*/
+            }
+            25% {
+                clip: rect(0px, 3px, 330px, 0px);
+            }
+            50% {
+                clip: rect(327px, 330px, 330px, 0px);
+            }
+            75% {
+                clip: rect(0px, 330px, 330px, 327px);
+            }
+        }
+        
+        .bg {
+            width: 100%;
+            position: fixed;
+            min-width: 1280px;
+            left: 0;
+            top: 0;
+            z-index: -1;
+        }
+    </style>
+</head>
+
+<body>
+    <video class="bg" muted autoplay="autoplay" loop src="bg.mp4"></video>
+    <div class="wrapBox">
+        <div class="clockBox">
+            <div class="dotBox">
+
+                <div class="hourHand"></div>
+                <div class="minuteHand"></div>
+                <div class="secondHand"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    var dotBox = document.getElementsByClassName("dotBox")[0];
+    var hourHand = document.getElementsByClassName("hourHand")[0];
+    var minuteHand = document.getElementsByClassName("minuteHand")[0];
+    var secondHand = document.getElementsByClassName("secondHand")[0];
+    var video = document.getElementsByTagName("video")[0];
+
+    hourHand.style.left = dotBox.offsetWidth / 2 - 10 + "px";
+    hourHand.style.top = (dotBox.clientHeight / 2 - hourHand.clientHeight / 2) + "px";
+    minuteHand.style.left = dotBox.offsetWidth / 2 - 10 + "px";
+    minuteHand.style.top = dotBox.clientHeight / 2 - minuteHand.offsetHeight / 2 + "px";
+    secondHand.style.left = dotBox.offsetWidth / 2 - 10 + "px";
+    secondHand.style.top = dotBox.clientHeight / 2 - secondHand.offsetHeight / 2 + "px";
+    var radius = dotBox.clientWidth / 2; //半径
+    for (var i = 0; i < 60; i++) {
+        var div = document.createElement("div");
+        div.className = "dotSmall";
+        if (i % 5 == 0) {
+            div.className = "dotBig";
+            var span = document.createElement("span");
+            span.innerHTML = i / 5 == 0 ? 12 : i / 5;
+            div.appendChild(span);
+            span.style.transform = `rotate(-${i * 6}deg) scale(0.8)`;
+            // div.setAttribute("data-attr", i / 5 == 0 ? 12 : i / 5);
+            // div.setAttribute("data-rotate", i * 6);
+            // console.dir(div)
+        }
+        dotBox.appendChild(div);
+        // div.style.transformOrigin = "center center";
+        div.style.transform = `rotate(${i * 6}deg) scale(0.8) translateY(${div.offsetHeight/2}px)`;
+        // div.style.transform = `rotate(${i * 6}deg) translateY(0px)`;
+        // div.style.transform = `rotate(${i * 6}deg) translateY(5px)`;
+
+        div.style.left = (Math.cos(Math.PI * (i * 6 - 90) / 180) * radius + radius - div.offsetWidth / 2).toFixed(1) + "px";
+        div.style.top = (Math.sin(Math.PI * (i * 6 - 90) / 180) * radius + radius - div.offsetHeight / 2).toFixed(1) + "px";
+
+    }
+    getTime()
+
+    function getTime() {
+        var date = new Date();
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var seconds = date.getSeconds();
+        var milliSeconds = date.getMilliseconds();
+
+        hourHand.style.transform = `rotate(${hours * 30-90 + minutes/60*30 }deg)`;
+        minuteHand.style.transform = `rotate(${minutes * 6-90+(seconds/60)*6}deg)`;
+        secondHand.style.transform = `rotate(${seconds*6-90+(milliSeconds/1000)*6}deg)`;
+        setTimeout(getTime, 80);
+    }
+    // var timer = setInterval(getTime, 10);
+</script>
+
+</html>

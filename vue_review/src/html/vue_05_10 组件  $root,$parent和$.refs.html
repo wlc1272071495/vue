@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <h3>{{msg}}</h3>
+        <com-one />
+    </div>
+</body>
+<script>
+    var comTwo = {
+        data() {
+            return {
+                msg: "我是组件 comTwo",
+                date: new Date().toLocaleDateString()
+            }
+        },
+        template: `
+            <div class="sub">
+                <h3 @click="fn">{{msg}}----------{{date}}</h3>
+                <input ref="inp"/>
+            </div>
+            `,
+        methods: {
+            fn() {
+                console.log(this.$parent)
+            }
+        }
+    }
+
+    var comOne = {
+        data() {
+            return {
+                msg: "我是组件 comOne",
+                date: new Date().toLocaleDateString()
+            }
+        },
+        template: `
+            <div class="parent">
+                <h3 @click="comOneTest">{{msg}}----------{{date}}</h3>
+                <com-two ref="two"></com-two>
+            </div>
+            `,
+        methods: {
+            comOneTest() {
+                // $root
+                // console.log("$root", this.$root)
+                // console.log(this.$root === vm)
+
+                // $parent
+                // console.log(this.$parent)
+                // console.log(this.$parent == vm)
+
+                // $ref
+                console.log(this.$refs.two.$refs.inp)
+            }
+        },
+        components: {
+            comTwo
+        }
+    }
+
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue_05_10 组件  $root,$parent和$.refs"
+        },
+        components: {
+            comOne
+        }
+
+    })
+</script>
+
+</html>

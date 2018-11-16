@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../styles/pikaday.css">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/pikaday.js"></script>
+    <!-- <script src="../libs/js/velocity.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0
+        }
+        
+        #app {
+            padding: 100px;
+        }
+        
+        #app>* {
+            margin: 10px;
+        }
+        
+        p {
+            width: 300px;
+            /* animation: Ani 2s 0.5s ease-in-out; */
+        }
+        
+        .ani-enter,
+        .ani-leave-to {
+            transform: scale(1);
+        }
+        
+        .ani-enter-active {
+            animation: Ani 2s ease-in-out;
+        }
+        
+        .ani-leave-active {
+            animation: Ani 2s .5s ease-in-out reverse;
+        }
+        
+        @keyframes Ani {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.5);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h2>{{msg}}</h2>
+        <button @click="isShow=!isShow">toggle-font</button>
+        <!-- :duration="{enter:2000,leave:2000}" -->
+        <transition name="ani" appear appear-class="ani-enter" appear-active-class="ani-enter-active" appear-to-class="ani-enter-to" @before-appear="beforeAappear">
+            <p v-if="isShow" @animationend="fn">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis enim libero, at lacinia diam fermentum id. Pellentesque habitant morbi tristique senectus et netus.
+            </p>
+        </transition>
+    </div>
+</body>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue_06_01 过渡  css动画",
+            isShow: true,
+
+        },
+        methods: {
+            fn() {
+                this.isOver = true;
+                // console.log(11111)
+                this.$emit("ani", "yaho")
+            },
+            beforeAappear(el) {
+                console.log(el)
+            }
+        },
+        mounted() {
+            this.$on("ani", function(val) {
+                console.log("ani ok!" + val)
+            })
+        }
+
+    })
+</script>
+
+</html>

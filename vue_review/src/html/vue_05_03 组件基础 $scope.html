@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 普通插槽 -->
+        <my-goods v-for="(goods,index) in dataList" :key="index">
+            <template>
+                <a>{{goods.id}}</a>
+                <a>{{goods.goodsName}}</a>
+                <a>{{goods.goodsPrice}}</a>
+                <a>{{goods.goodsNum}}</a>
+            </template>
+        </my-goods>
+        <!-- 作用域插槽 -->
+        <my-goods-test v-for="(goods,index) in dataList" :key="goods.id" :goods="goods">
+            <template slot-scope="{test}">
+                <a>{{test.id}}</a>
+                <a>{{test.goodsName}}</a>
+                <a>{{test.goodsPrice}}</a>
+                <a>{{test.goodsNum}}</a>
+            </template>
+        </my-goods-test>
+    </div>
+</body>
+<script>
+    Vue.component("myGoods", {
+        // props: ["goods"],
+        template: `
+            <div class="goods" >
+               <slot></slot>
+            </div> 
+        `,
+        mounted() {
+            console.log(this)
+        }
+
+    })
+    Vue.component("myGoodsTest", {
+        props: ["goods"],
+        template: `
+            <div class="goods" >
+               <slot :test="goods"></slot>
+            </div> 
+        `,
+        // mounted() {
+        //     console.log(this)
+        // },
+    })
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "组件基础",
+            dataList: [{
+                id: "A001",
+                goodsName: "一加耳机",
+                goodsPrice: 199,
+                goodsNum: 2
+            }, {
+                id: "A002",
+                goodsName: "一加手机壳",
+                goodsPrice: 99,
+                goodsNum: 3
+            }, {
+                id: "A003",
+                goodsName: "一加6 手机",
+                goodsPrice: 3599,
+                goodsNum: 5
+            }],
+        },
+        mounted() {
+            console.log(this)
+        }
+    })
+</script>
+
+</html>

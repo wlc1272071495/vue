@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <my-com v-model="isChecked" @change="fn"></my-com>
+    </div>
+</body>
+<script>
+    // 一个组件上的 v - model 默认会利用名为 value 的 prop 和名为 input 的事件，但是像单选框、复选框等类型的输入控件可能会将 value 特性用于不同的目的。model 选项可以用来避免这样的冲突：
+    //  model: {
+    //         prop: "checked",
+    //             event: "change"
+    //     },
+    // 这里的 isChecked 的值将会传入这个名为 checked 的 prop。同时当 <my-com> 触发一个 change 事件并附带一个新的值的时候，这个 isChecked 的属性将会被更新(isChecked变为change事件中附带的值)。
+    var myCom = {
+        model: {
+            prop: "checked",
+            event: "change"
+        },
+        props: {
+            checked: Boolean
+        },
+        template: `
+            <div>
+                 <input type="checkbox" :checked="checked" @change="$emit('change',$event.target.checked)" >
+            </div>
+        `
+    }
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "自定义事件",
+            count: 0,
+            isChecked: false
+        },
+        methods: {
+            addFn() {
+                this.count++;
+            },
+            fn(e) {
+                console.log("e", e)
+                console.log("isChecked", this.isChecked)
+            }
+        },
+        components: {
+            myCom
+        }
+    })
+</script>
+
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h2>{{msg}}</h2>
+        <span>input：{{text}}</span>
+        <my-com class="myCom" @input.native="fn"></my-com>
+    </div>
+</body>
+<script>
+    // 你可能有很多次想要在一个组件的根元素上直接监听一个原生事件。这时，你可以使用 v-on 的 .native 修饰符：
+
+    // 测试一：
+    // var myCom = {
+    //     template: `
+    //         <div>
+    //              <input type="text" @input="$emit('input',$event.target.value)"  v-bind="$attrs">
+    //         </div>
+    //     `,
+    // }
+    var myCom = {
+        template: `
+            <div>
+                 <input type="text" v-on="inputEvents"  v-bind="$attrs">
+            </div>
+        `,
+        computed: {
+            inputEvents() {
+                var that = this;
+                return Object.assign({}, this.$listeners, {
+                    input(e) {
+                        // console.log("我是emit中input事件的事件对象：", e)
+                        that.$emit("input", e.target.value)
+                    }
+                })
+            }
+        }
+    }
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "将原生事件绑定到组件",
+            text: ""
+        },
+        methods: {
+            fn(val) {
+                console.log(val)
+                this.text = val.target.value
+            }
+        },
+        components: {
+            myCom
+        }
+    })
+</script>
+
+</html>

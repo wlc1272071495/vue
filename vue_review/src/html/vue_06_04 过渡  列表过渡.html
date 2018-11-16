@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../styles/pikaday.css">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/lodash.js"></script>
+    <!-- <script src="../libs/js/pikaday.js"></script> -->
+    <!-- <script src="../libs/js/velocity.js"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script> -->
+    <style>
+        * {
+            padding: 0;
+            margin: 0
+        }
+        
+        .wrapBox {
+            /* display: flex; */
+            width: 400px;
+            /* flex-wrap: wrap; */
+        }
+        
+        #app {
+            padding: 50px;
+        }
+        
+        #app>button {
+            margin: 30px 20px;
+            margin-left: 0;
+        }
+        
+        .wrapBox span {
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            background-color: dimgrey;
+            margin: 5px;
+            display: inline-block;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .fadeInOut-enter,
+        .fadeInOut-leave-to {
+            transform: translateY(150%);
+            opacity: 0;
+            z-index: 0;
+        }
+        
+        .fadeInOut-enter-active,
+        .fadeInOut-leave-active {
+            transition: all 1s;
+        }
+        
+        .fadeInOut-enter-to,
+        .fadeInOut-leave {
+            transform: translateY(0);
+            opacity: 1;
+            z-index: 1;
+        }
+        
+        .fadeInOut-move {
+            transition: all 1s;
+        }
+    </style>
+</head>
+
+<body>
+    <!--mode只适用于一个transition内的同标签切换-->
+    <!-- v-move 对于设置过渡的切换时机和过渡曲线非常有用，你会看到如下的例子：
+        .fadeInOut-move {
+            transition: all 1s;
+        }
+    -->
+    <div id="app">
+        <button @click="add">add</button>
+        <button @click="remove">remove</button>
+        <button @click="shuffle">shuffle</button>
+        <transition-group tag="div" class="wrapBox" name="fadeInOut">
+            <span v-for="(item,index) in numList" :index="index" :key="item">{{item}}</span>
+        </transition-group>
+    </div>
+</body>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "列表过渡",
+            numList: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+            num: 10
+        },
+        methods: {
+            add() {
+                var index = Math.floor(Math.random() * this.numList.length);
+                this.numList.splice(index, 0, this.num++)
+            },
+            remove() {
+                var index = Math.floor(Math.random() * this.numList.length);
+                this.numList.splice(index, 1)
+            },
+            shuffle() {
+                this.numList = _.shuffle(this.numList)
+            }
+        },
+        components: {
+
+        }
+    })
+</script>
+
+</html>

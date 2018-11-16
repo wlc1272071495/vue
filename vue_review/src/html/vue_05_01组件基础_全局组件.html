@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <my-btn></my-btn>
+        <my-btn></my-btn>
+        <my-btn></my-btn>
+    </div>
+</body>
+<script>
+    // 全局注册,也就是说它们在注册之后可以用在任何新创建的 Vue 根实例 (new Vue) 的模板中,
+    // 在所有子组件中也是如此， 也就是说全局注册的组件在各自内部也都可以相互使用。
+    Vue.component("myBtn", {
+        data() {
+            return {
+                count: 0
+            }
+        },
+        template: `
+            <button @click="count++">
+                you click this button {{count}} times
+            </button>
+        `
+    })
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "组件基础"
+        }
+    })
+</script>
+
+</html>

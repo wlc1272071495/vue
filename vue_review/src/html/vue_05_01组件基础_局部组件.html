@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <my-button></my-button>
+        <my-button></my-button>
+        <my-button></my-button>
+    </div>
+</body>
+<script>
+    var myButton = {
+        data() {
+            return {
+                count: 0
+            };
+        },
+        template: `
+            <button @click="count++">
+                You has clicked this button {{count}} times
+            </button>
+        `
+    };
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "组件基础"
+        },
+        components: { //注意局部注册的组件需要经由此属性引入，且在其子组件中不可用，若要使用需要在子组件引入
+            myButton
+        }
+    });
+</script>
+
+</html>

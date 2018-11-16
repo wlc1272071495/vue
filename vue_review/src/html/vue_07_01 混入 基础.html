@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../styles/pikaday.css">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/lodash.js"></script>
+    <!-- <script src="../libs/js/pikaday.js"></script> -->
+    <script src="../libs/js/velocity.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script> -->
+    <style>
+        * {
+            padding: 0;
+            margin: 0
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h2>{{msg}}</h2>
+        <com-a></com-a>
+    </div>
+</body>
+<script>
+    var comA = {
+        data() {
+            return {
+                msg: "我是组件A",
+                list: [{
+                    msg: 'Bruce Lee'
+                }, {
+                    msg: 'Jackie Chan'
+                }, {
+                    msg: 'Chuck Norris'
+                }, {
+                    msg: 'Jet Li'
+                }, {
+                    msg: 'Kung Fury'
+                }]
+            }
+        },
+        template: `
+            <div>
+                <span>{{msg}}</span>
+            </div>
+        `,
+        mounted() {
+            console.log(this);
+        }
+    };
+    // var Component = Vue.extend({
+    //     mixins: [myMixins]
+    // });
+    // // console.log(Vue)
+    // // console.log(Component)
+    // var comA = new Component({
+    //     template: `
+    //         <div>
+    //             <span>{{msg}}</span>
+    //         </div>
+    //     `,
+    // })
+    // console.log(comA)
+    // var vm = new Vue({
+    //     el: "#app",
+    //     data: {
+    //         msg: "vue_07_01 混入 基础.html",
+    //     },
+    //     methods: {
+
+    //     },
+    //     computed: {
+
+    //     },
+    //     components: {
+    //         comA
+    //     }
+    // })
+
+    var myMixin = {
+        created: function() {
+            this.hello()
+        },
+        methods: {
+            hello: function() {
+                console.log('hello from mixin!')
+            }
+        }
+    }
+
+    // 定义一个使用混入对象的组件
+    var Component = Vue.extend({
+        mixins: [myMixin]
+    })
+
+    // var component = new Component() // => "hello from mixin!"
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue_07_01 混入 基础.html",
+        },
+        methods: {
+
+        },
+        computed: {
+
+        },
+        components: {
+            comA
+        }
+
+    })
+</script>
+
+</html>

@@ -26,6 +26,7 @@
             height: 100px;
             background: #6ff;
             margin: 50px;
+            display: block;
         }
     </style>
 </head>
@@ -35,19 +36,52 @@
         <h3>{{msg}}</h3>
         <span>{{count}}</span>-------
         <button @click="count++">+</button>
-        <div class="wrap" @mouseover="over " @mouseout="out">
+
+        <h2>事件修饰符</h2>
+        <form action="" @submit.prevent>
+            <h4>stop 和 prevent</h4>
+            <div class="wrap" @click="par">
+                <div class="sub" @click.stop="sub"></div>
+            </div>
+            <hr>
+            <h4>self 只当在 event.target 是当前元素自身时触发处理函数</h4>
+            <div class="wrap" @click.self="par">
+                <a href="http://www.baidu.com" class="sub" @click.self.prevent=""></a>
+            </div>
+            <hr>
+            <h4>capture 添加事件监听器时使用事件捕获模式 即元素自身触发的事件先在此处理，然后才交由内部元素进行处理</h4>
+            <div class="wrap" @click.capture="par">
+                <div class="sub" @click.capture="sub"></div>
+            </div>
+
+            <div class="wrap">
+                <a class="sub" @click.self.prevent="con2"></a>
+            </div>
+            <div class="wrap">
+                <a class="sub" @click.prevent.self="con2"></a>
+            </div>
+
+            <input type="submit" value="提交">
+        </form>
+
+        <div class="wrap" @mouseover="over" @mouseout="out">
             <div class="sub"></div>
         </div>
 
         <h3>按键修饰符</h3>
-        <input type="text" @keyup.13="count++">
-        <input type="text" @keypress.space="count++">
+        <input type="text" placeholder="请按下Enter" @keyup.13="count++">
+        <input type="text" placeholder="请按下space" @keypress.space="count++">
+        <!-- 先通过原生js阻止默认事件（.prevent修饰符，无法阻止），在规定按键修饰符(Vue.config.keyCode.f1)等的按键反应 -->
+        <input type="text" placeholder="请按下f1,f2,f4,f5" @keyup.f1.f2.f4.f5="keyCode">
+
+        <span>{{count}}</span>-------
+        <!-- <button @keypress.f1="count++">点击F1增加count</button> -->
 
         <div class="wrap">
-            <div class="sub" @contextmenu.right.self.prevent="con1"></div>
+            <a class="sub" @contextmenu.right.self.prevent="con1"></a>
         </div>
         <div class="wrap">
-            <div class="sub" @contextmenu.right.prevent.self="con2"></div>
+            <a class="sub" @contextmenu.right.prevent.self="con2"></a>
         </div>
 
         <!-- 即使 Alt 或 Shift 被一同按下时也会触发 -->
@@ -101,7 +135,14 @@
     // 管道符 声明这是个过滤器
 
 
-
+    Vue.config.keyCodes = {
+        "f1": 112,
+        "f2": 113,
+        f3: 114,
+        f4: 115,
+        f5: 116
+    };
+    // Vue.config.keyCodes.f1 = 112;
     var example1 = new Vue({
         el: '#example-1',
         data: {
@@ -110,6 +151,12 @@
             count: 100
         },
         methods: {
+            par() {
+                console.log("I`m parent!")
+            },
+            sub() {
+                console.log("I`m sub!")
+            },
             over() {
                 console.log('I`m coming')
             },
@@ -124,6 +171,14 @@
             },
             con2() {
                 console.log("@click.prevent.self")
+            },
+            keyCode(e) {
+                console.log(e.keyCode);
+                this.count++;
+            },
+            onScroll() {
+                var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+                console.log(parseInt(scrollTop));
             }
         },
         filters: { // 管道符 声明这是个过滤器
@@ -133,8 +188,25 @@
             fixed(num) {
                 return num.toFixed(2);
             }
-        }
+        },
+        mounted() {
+            window.addEventListener("scroll", this.onScroll)
+        },
     });
+
+    // 先通过原生js阻止默认事件（.prevent修饰符，无法阻止），在规定按键修饰符(Vue.config.keyCode.f1)等的按键反应
+    document.onkeydown = function(e) {
+        var ev = window.event || e;
+        var code = ev.keyCode || ev.which;
+        if (code == 116 || code == 112) {
+            if (ev.preventDefault) {
+                ev.preventDefault();
+            } else {
+                ev.keyCode = 0;
+                ev.returnValue = false;
+            }
+        }
+    }
 </script>
 
 </html>

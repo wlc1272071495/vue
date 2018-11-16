@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../styles/pikaday.css">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/pikaday.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <h3>{{msg}}</h3>
+        <com-one></com-one>
+        <com-two></com-two>
+        <com-three></com-three>
+    </div>
+</body>
+<script>
+    var comOne = {
+        data() {
+            return {
+                msg: "我是组件 comOne",
+                date: new Date().toLocaleDateString()
+            }
+        },
+        template: `
+            <div class="parent">
+                <h3>{{msg}}----------{{date}}</h3>
+                <input ref="inp" />   <button @click="$destroy()">销毁</button> 
+            </div>
+            `,
+        methods: {
+
+        },
+        mounted() {
+            this.pikaDay = new Pikaday({
+                field: this.$refs.inp,
+                format: "yy-mm-dd"
+            })
+        },
+        destroyed() {
+            console.log(this.pikaDay)
+            this.pikaDay.destroy();
+        },
+    }
+    var comTwo = {
+        data() {
+            return {
+                msg: "我是组件 comTwo",
+                date: new Date().toLocaleDateString()
+            }
+        },
+        template: `
+            <div class="parent">
+                <h3>{{msg}}----------{{date}}</h3>
+                <input ref="inp" />   <button @click="$destroy()">销毁</button> 
+            </div>
+            `,
+        methods: {
+
+        },
+        mounted() {
+            // 只能给 单个元素添加
+            var pikaDay = new Pikaday({
+                field: this.$refs.inp,
+                format: "yy-mm-dd"
+            })
+            this.$on("hook:beforeDestroy", function() {
+                pikaDay.destroy()
+            })
+        }
+    }
+    var comThree = {
+        data() {
+            return {
+                msg: "我是组件 comTwo",
+                date: new Date().toLocaleDateString()
+            }
+        },
+        template: `
+            <div class="parent">
+                <h3>{{msg}}----------{{date}}</h3>
+                <input ref="inp1" />__<input ref="inp2" />   <button @click="$destroy()">销毁</button> 
+            </div>
+            `,
+        methods: {
+            // 封装函数 给多个元素添加
+            addEvent(ele) {
+                var pikaDay = new Pikaday({
+                    field: this.$refs[ele],
+                    format: "yy-mm-dd"
+                })
+                this.$on("hook:beforeDestroy", function() {
+                    pikaDay.destroy()
+                })
+            }
+        },
+        mounted() {
+            this.addEvent("inp1");
+            this.addEvent("inp2");
+        }
+    }
+
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue_05_10 组件 程序化的事件侦听器"
+        },
+        components: {
+            comOne,
+            comTwo,
+            comThree
+        },
+        provide() {
+            return {
+                vmData: this.$data,
+                vmfn: this.vmfn
+            }
+        },
+        methods: {
+            vmfn() {
+                console.log(this)
+            }
+        }
+
+    })
+</script>
+
+</html>

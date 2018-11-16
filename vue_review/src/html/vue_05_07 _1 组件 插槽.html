@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h2>{{msg}}</h2>
+        <my-com>
+            点击
+        </my-com>
+        <my-page></my-page>
+    </div>
+</body>
+<script>
+    var myCom = {
+        template: `
+            <button v-on="buttonEvents">
+                <slot></slot>
+            </button>
+        `,
+        computed: {
+            buttonEvents() {
+                var that = this;
+                return Object.assign({}, this.$listeners, {
+                    click(e) {
+                        that.$emit("click", e)
+                    }
+                })
+            }
+        }
+    }
+
+    var myPage = {
+        data() {
+            return {
+                msg: "我是子组件myPage",
+                count: 0
+            }
+        },
+        components: {
+            myCom
+        },
+        template: `
+        <div class="mypage">
+            <p>{{msg}}</p>
+            <span>计数：{{count}}</span>
+            <my-com @click.native="fn">
+                点击
+            </my-com>
+        </div>
+            
+        `,
+        methods: {
+            fn() {
+                this.count++;
+            }
+        },
+        watch: {
+            count(newValue, oldValue) {
+                // console.log(newValue, oldValue)
+
+                // if (newValue != oldValue) {
+                //     this.$emit("click",)
+                // }
+            }
+        }
+    }
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue_05_07 组件 插槽",
+        },
+        methods: {
+
+        },
+        components: {
+            myCom,
+            myPage
+        }
+    })
+</script>
+
+</html>
