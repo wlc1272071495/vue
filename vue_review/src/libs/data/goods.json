@@ -1,0 +1,25 @@
+[{
+        "goodsId": "A001",
+        "goodsName": "商品1",
+        "goodsPrice": "3306",
+        "goodsNum": 10
+    },
+    {
+        "goodsId": "A002",
+        "goodsName": "商品2",
+        "goodsPrice": "3699",
+        "goodsNum": 5
+    },
+    {
+        "goodsId": "A003",
+        "goodsName": "商品3",
+        "goodsPrice": "5200",
+        "goodsNum": 9
+    },
+    {
+        "goodsId": "A004",
+        "goodsName": "商品4",
+        "goodsPrice": "7366",
+        "goodsNum": 2
+    }
+]

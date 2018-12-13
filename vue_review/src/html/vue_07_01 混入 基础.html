@@ -27,7 +27,7 @@
     </div>
 </body>
 <script>
-    var comA = {
+    var myMixins = {
         data() {
             return {
                 msg: "我是组件A",
@@ -44,66 +44,35 @@
                 }]
             }
         },
+        created() {
+            console.log("组件已生成")
+        },
+        mounted() {
+            console.log("组件已加载")
+                // console.log(this);
+        }
+    };
+    var comA = Vue.extend({
+        mixins: [myMixins],
         template: `
             <div>
                 <span>{{msg}}</span>
             </div>
         `,
-        mounted() {
-            console.log(this);
-        }
-    };
-    // var Component = Vue.extend({
-    //     mixins: [myMixins]
-    // });
-    // // console.log(Vue)
-    // // console.log(Component)
-    // var comA = new Component({
-    //     template: `
-    //         <div>
-    //             <span>{{msg}}</span>
-    //         </div>
-    //     `,
-    // })
-    // console.log(comA)
-    // var vm = new Vue({
-    //     el: "#app",
-    //     data: {
-    //         msg: "vue_07_01 混入 基础.html",
-    //     },
-    //     methods: {
+    });
+    // var one = new Component();   // 此处直接创建Vue 实例用法 new Component().$mount('#mount-point')
 
-    //     },
-    //     computed: {
-
-    //     },
-    //     components: {
-    //         comA
-    //     }
-    // })
-
-    var myMixin = {
-        created: function() {
-            this.hello()
-        },
-        methods: {
-            hello: function() {
-                console.log('hello from mixin!')
-            }
-        }
-    }
-
-    // 定义一个使用混入对象的组件
-    var Component = Vue.extend({
-        mixins: [myMixin]
-    })
-
-    // var component = new Component() // => "hello from mixin!"
     var vm = new Vue({
         el: "#app",
         data: {
             msg: "vue_07_01 混入 基础.html",
         },
+        template: `
+            <div id="app">
+                <h3>{{msg}}</h3>
+                <com-a></com-a>
+            </div>
+        `,
         methods: {
 
         },
@@ -113,7 +82,6 @@
         components: {
             comA
         }
-
     })
 </script>
 

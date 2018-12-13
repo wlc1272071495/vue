@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../styles/pikaday.css">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/lodash.js"></script>
+    <!-- <script src="../libs/js/pikaday.js"></script> -->
+    <script src="../libs/js/velocity.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script> -->
+    <style>
+        * {
+            padding: 0;
+            margin: 0
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h2>{{msg}}</h2>
+        <span>{{name}}----{{age}}----{{hobby}}</span>
+    </div>
+</body>
+<script>
+    // 当组件和混入对象含有同名选项时， 这些选项将以恰当的方式混合。
+    // 比如， 数据对象在内部会进行浅合并(一层属性深度)， 在和组件的数据发生冲突时以组件数据优先。
+    // 而同名钩子函数将混合为一个数组，因此都将被调用。另外，混入对象的钩子将在组件自身钩子之前调用。
+    var mixins = {
+        data() {
+            return {
+                name: "www",
+                age: 18,
+                hobby: "ani"
+            }
+        },
+        created() {
+            console.log("i`m minxins created")
+        }
+    }
+
+    var vm = new Vue({
+        mixins: [mixins],
+        el: "#app",
+        data: {
+            msg: "vue_07_02 混入 选项合并.html",
+            name: "huaishuanglingzhi",
+            age: 25
+        },
+        created() {
+            console.log("i`m vm created")
+        }
+    })
+</script>
+
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../styles/pikaday.css">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/lodash.js"></script>
+    <!-- <script src="../libs/js/pikaday.js"></script> -->
+    <script src="../libs/js/velocity.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script> -->
+    <style>
+        * {
+            padding: 0;
+            margin: 0
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h2>{{msg}}</h2>
+        <span>{{name}}----{{age}}----{{hobby}}</span>
+    </div>
+</body>
+<script>
+    Vue.mixin({
+        data() {
+            return {
+                name: "www",
+                age: 18,
+                hobby: "ani"
+            }
+        },
+        created() {
+            if (this.msg) {
+                console.log(this.msg)
+            } else {
+                console.log("hello world")
+            }
+        }
+    })
+
+    var vm = new Vue({
+
+        el: "#app",
+        data: {
+            msg: "vue_07_02 混入 选项合并.html",
+            name: "huaishuanglingzhi",
+            age: 25
+        },
+        created() {
+            console.log("i`m vm created")
+        }
+    })
+</script>
+
+</html>

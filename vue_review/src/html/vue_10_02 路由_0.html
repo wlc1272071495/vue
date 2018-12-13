@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../styles/pikaday.css">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/vue-router.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <router-link v-for="item in items" :to="{path: '/' + item.id}" :key="item.id">{{ item.content }}</router-link>
+    </div>
+    <router-view></router-view>
+</body>
+<script>
+    Vue.use(VueRouter);
+    var index = {
+        template: "<div>我是组件index。。。</div>"
+    };
+
+    var overview = {
+        template: "<div>我是组件about。。。</div>"
+    };
+
+    //创建一个路由对象
+    var routes = [{
+        path: '/home',
+        component: index,
+        name: "home"
+    }, {
+        path: '/overview',
+        component: overview,
+        name: "overview"
+    }, ];
+
+    //创建实例
+    var router = new VueRouter({
+        routes
+    });
+
+    var app = new Vue({
+        el: "#app",
+        router: router,
+        data: {
+            items: [{
+                content: '首页',
+                id: "home"
+            }, {
+                content: '概述',
+                id: "overview"
+            }, ]
+        }
+    });
+</script>
+
+</html>

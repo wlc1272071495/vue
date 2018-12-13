@@ -24,6 +24,14 @@
             </template>
         </my-goods>
         <!-- 作用域插槽 -->
+        <my-goods-test v-for="(goods,index) in dataList" :key="goods.name" :goods="goods">
+            <template slot-scope="slotProps">
+                    <a>{{slotProps.test.id}}</a>
+                    <a>{{slotProps.test.goodsName}}</a>
+                    <a>{{slotProps.test.goodsPrice}}</a>
+                    <a>{{slotProps.test.goodsNum}}</a>
+                </template>
+        </my-goods-test>
         <my-goods-test v-for="(goods,index) in dataList" :key="goods.id" :goods="goods">
             <template slot-scope="{test}">
                 <a>{{test.id}}</a>
@@ -43,7 +51,7 @@
             </div> 
         `,
         mounted() {
-            console.log(this)
+            // console.log(this)
         }
 
     })
@@ -54,9 +62,10 @@
                <slot :test="goods"></slot>
             </div> 
         `,
-        // mounted() {
-        //     console.log(this)
-        // },
+        mounted() {
+            console.log(this.$slots)
+        }
+
     })
 
     var vm = new Vue({
@@ -81,7 +90,7 @@
             }],
         },
         mounted() {
-            console.log(this)
+            // console.log(this)
         }
     })
 </script>

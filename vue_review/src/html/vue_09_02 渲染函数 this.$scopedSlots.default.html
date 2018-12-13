@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../styles/pikaday.css">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/lodash.js"></script>
+    <!-- <script src="../libs/js/pikaday.js"></script> -->
+    <script src="../libs/js/velocity.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script> -->
+    <style>
+        * {
+            padding: 0;
+            margin: 0
+        }
+        
+        .active {
+            background: gray;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- id="test"  -->
+    <div id="app">
+        <p>{{msg}}</p>
+        <anchored-heading :level="1">
+            <template slot-scope="slotProps">
+                <a>{{slotProps.todo.id}}——————————{{slotProps.todo.text}}</a>
+            </template>
+        </anchored-heading>
+
+    </div>
+</body>
+<script>
+    // 你可以通过 this.$slots 访问静态插槽的内容，得到的是一个 VNodes 数组：
+    // Vue.component("anchored-heading", {
+    //     data() {
+    //         return {
+    //             todoData: [{
+    //                 id: 0,
+    //                 text: '蔬菜'
+    //             }, {
+    //                 id: 1,
+    //                 text: '奶酪'
+    //             }, {
+    //                 id: 2,
+    //                 text: '随便其它什么人吃的东西'
+    //             }],
+    //             activeIdx: 0
+    //         }
+    //     },
+    //     render(createElement) {
+    //         console.log(this.$scopedSlots.default);
+    //         // 你可以通过 this.$slots 访问静态插槽的内容，得到的是一个 VNodes 数组;
+    //         //  此处动态生成
+    //         //     <ul>
+    //         //         <li>
+    //         //             <slot : todo="item"></slot>
+    //         //        </li>
+    //         //     </ul >
+    //         var that = this;
+    //         return createElement("ul", {
+    //             class: {
+    //                 wrap: true
+    //             },
+    //             style: {
+    //                 fontSize: "18px"
+    //             },
+    //             attrs: {
+    //                 id: "box",
+    //                 "data-id": "first"
+    //             }
+    //         }, this.todoData.map(function(item, index) {
+    //             return createElement("li", {
+    //                 class: {
+    //                     item: true,
+    //                         active: (index == that.activeIdx ? true : false)
+    //                 },
+    //                 on: {
+    //                     click: function(e) {
+    //                         console.log(level)
+    //                         that.activeIdx = index;
+    //                     }
+    //                 }
+    //             }, that.$scopedSlots.default({
+    //                 todo: item
+    //             }))
+    //         }));
+    //     }
+    // })
+
+    // JSX  模板
+    Vue.component("anchored-heading", {
+        data() {
+            return {
+                todoData: [{
+                    id: 0,
+                    text: '蔬菜'
+                }, {
+                    id: 1,
+                    text: '奶酪'
+                }, {
+                    id: 2,
+                    text: '随便其它什么人吃的东西'
+                }],
+                activeIdx: 0
+            }
+        },
+        render(h) {
+            return ( <
+                div > 123123123123 < /div>
+            );
+            // ` <ul>
+            //     <li>
+            //         <slot :todo="item"></slot>
+            //    </li>
+            // </ul >`
+
+
+        }
+    })
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue_09_01 渲染函数.html",
+        },
+        methods: {
+
+        }
+
+    })
+</script>
+
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../styles/pikaday.css">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/vue-router.js"></script>
+    <script src="../libs/js/vuex.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <h3>{{msg}}</h3>
+        <p>count: {{count}}----<button @click="fn">点击</button> </p>
+        <com-a></com-a>
+        <com-b></com-b>
+    </div>
+</body>
+<script>
+    Vue.use(Vuex);
+
+    var moduleA = new Vuex.Store({
+        state: {
+            count: 0
+        },
+        mutations: {
+            increase: (state) => state.count++,
+        },
+        getters: {
+            doubleCount: (state) => state.count * 2
+        },
+        actions: {
+            addRoot({
+                commit,
+                dispatch,
+                rootState,
+                rootGetters
+            }) {
+                console.log(rootState, rootGetters);
+                commit("increase", null, {
+                    root: true
+                })
+            }
+        }
+    })
+    var moduleB = new Vuex.Store({
+        state: {
+            count: 0
+        },
+        mutations: {
+            addCount(state) {
+                state.count++;
+            }
+        },
+        getters: {
+            doubleCount: (state) => state.count * 2
+        }
+    })
+
+    // var store = new Vuex.Store({
+    //     state: {
+    //         count: 1
+    //     },
+    //     mutations: {
+    //         addRootCount(state) {
+    //             console.log(1111)
+    //             state.count++;
+    //         }
+    //     },
+    //     modules: {
+    //         a: moduleA,
+    //         b: moduleB
+    //     }
+    // })
+    var store = new Vuex.Store({
+        state: {
+            count: 1
+        },
+        mutations: {
+            addRootCount(state) {
+                console.log(1111)
+                state.count++;
+            }
+        },
+        modules: {
+            a: {
+                namespaced: true,
+                ...moduleA
+            },
+            b: moduleB
+        }
+    })
+
+    var comA = {
+        data() {
+            return {
+                msg: "我是组件ComA"
+            }
+        },
+        store: moduleA,
+        template: `
+            <div class="one">
+                <p>{{msg}}</p>
+                <p>count: {{count}}----doubleCount{{doubleCount}}---- <button @click="fn">点击</button> </p>
+                <p>点击增加根store的count:<button @click="clickFn">点击</button></p>
+             </div>
+        `,
+        computed: {
+            ...Vuex.mapState({
+                count: (state) => state.count
+            }),
+            ...Vuex.mapGetters({
+                doubleCount: "doubleCount"
+            })
+        },
+        methods: {
+            fn() {
+                this.$store.commit("increase");
+            },
+            clickFn() {
+                this.addRoot();
+                // this.$store.dispatch("addRoot")
+            },
+            ...Vuex.mapMutations({
+                increase: "increase"
+            }),
+            ...Vuex.mapActions({
+                addRoot: "addRoot"
+            })
+        }
+    }
+    var comB = {
+        data() {
+            return {
+                msg: "我是组件ComB"
+            }
+        },
+        store: moduleB,
+        template: `
+            <div class="two">
+                <p>{{msg}}</p>
+                    <p>count: {{count}}----doubleCount:{{doubleCount}}---- <button @click="fn">点击</button> </p>
+             </div>
+        `,
+        computed: {
+            ...Vuex.mapState({
+                count: (state) => state.count
+            }),
+            ...Vuex.mapGetters({
+                doubleCount: "doubleCount"
+            })
+        },
+        methods: {
+            fn() {
+                this.$store.commit("addCount");
+            },
+            ...Vuex.mapMutations({
+                addCount: "addCount"
+            })
+        }
+    }
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "Vuex module"
+        },
+        store,
+        computed: {
+            ...Vuex.mapState({
+                count: (state) => state.count
+            })
+        },
+        methods: {
+            fn() {
+                this.addRootCount();
+            },
+            ...Vuex.mapMutations({
+                addRootCount: "addRootCount"
+            })
+        },
+        components: {
+            comA,
+            comB
+        }
+    })
+</script>
+
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../styles/pikaday.css">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/vue-router.js"></script>
+    <script src="../libs/js/vuex.min.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h2>{{msg}}</h2>
+        <span>{{name}}---{{count}}</span>---<button @click="fn">点击</button>
+        <com-a></com-a>
+    </div>
+</body>
+<script>
+    Vue.use(Vuex);
+    var store = new Vuex.Store({
+        state: {
+            count: 0,
+            name: "www",
+            age: 18,
+            hobby: "Ani"
+        },
+        mutations: {
+            increase(state) {
+                state.count++;
+                // console.log(state.count)
+            },
+            changeName(state) {
+                if (state.name == "wlc") {
+                    state.name = "www";
+                } else {
+                    state.name = "wlc";
+                }
+            }
+        }
+    })
+
+    var comA = {
+        data() {
+            return {
+                // count: 0,
+                msg: "我是组件ComA"
+            }
+        },
+        store,
+        computed: {
+            ...(Vuex.mapState({
+                // count: state => state.count
+                count: "count",
+                name: state => state.name,
+                age: state => state.age,
+                hobby: state => state.hobby
+            }))
+        },
+        methods: {
+            fn() {
+                console.log(this)
+                this.$store.commit("increase");
+            },
+            nameFn() {
+                this.$store.commit("changeName")
+            }
+        },
+        template: `
+            <div>
+                <p>{{msg}}</p>
+                <p>{{name}}----{{age}}----{{hobby}}</p>
+                <button @click="nameFn">改名字</button>
+                <span>{{count}}</span>---<button @click="fn">点击</button>
+            </div>
+        `
+    }
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "Vuex test"
+        },
+        store,
+        computed: {
+            count: () => this.store.state.count,
+            name: () => this.store.state.name
+        },
+        methods: {
+            fn() {
+                console.log(this)
+                this.$store.commit("increase");
+            }
+        },
+        components: {
+            comA
+        }
+
+    })
+</script>
+
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../styles/pikaday.css">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/vue-router.js"></script>
+    <script src="../libs/js/vuex.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <h2>{{msg}}</h2>
+        <p>{{name}}----{{age}}----{{hobby}}----------<button @click="changeName">点击</button></p>
+        <span>{{count}}</span>---<button @click="fn">点击</button>
+        <p>
+            goods:
+            <select v-model="select" @change="inpFn">
+                <option v-for="(item,index) in goodsList" :key="item.goodsId"  :value="item.goodsId">{{item.goodsName}}</option>
+            </select>
+        </p>
+    </div>
+</body>
+<script>
+    Vue.use(Vuex);
+    var store = new Vuex.Store({
+        state: {
+            count: 0,
+            name: "www",
+            age: 18,
+            hobby: "Ani",
+            goodsList: null
+        },
+        getters: {
+            goods: (state) =>
+                state.goodsList.filter((item) => item.goodsPrice > 4000),
+            getGoodsById: (state) => (id) =>
+                state.goodsList.find(item => item.goodsId == id)
+        },
+        mutations: {
+            increase(state, payload) {
+                state.count++;
+                // console.log(state.count)
+            },
+            changeName(state, payload) {
+                if (state.name != "www") {
+                    state.name = "www";
+                } else {
+                    state.name = "wlc";
+                }
+                if (payload) {
+                    state.name = payload;
+                }
+            },
+            setData(state, payload) {
+                state.goodsList = payload.data
+            }
+        },
+        actions: {
+            addCount(context) {
+                context.commit("increase");
+            },
+            getData(context) {
+                var req = new XMLHttpRequest();
+                req.open("get", "../libs/data/goods.json", true);
+                req.send();
+                req.onload = function() {
+                    var result = JSON.parse(req.responseText);
+                    console.log(result)
+                    context.commit("setData", {
+                        data: result
+                    })
+                }
+
+            }
+        }
+    })
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "Vuex test",
+            select: "A001"
+        },
+        store,
+        computed: {
+            ...Vuex.mapState({
+                count: () => store.state.count,
+                name: () => store.state.name,
+                age: "age",
+                hobby: "hobby",
+                goodsList: "goodsList"
+            }),
+            ...Vuex.mapGetters({
+                goods: "goods",
+                getGoodsById: "getGoodsById"
+            })
+        },
+        methods: {
+            fn() {
+                // console.log(this)
+                // this.$store.commit("increase");
+                this.add()
+            },
+            changeName() {
+                // console.log(this)
+                // this.$store.commit("changeName", "haha");
+                this.gaiName("haha")
+            },
+            inpFn() {
+                console.log(this.getGoodsById(this.select))
+            },
+            ...Vuex.mapMutations({
+                increase: "increase",
+                gaiName: "changeName",
+                add: "increase"
+            }),
+            ...Vuex.mapActions({
+                getData: "getDate",
+                addCount: "addCount"
+            })
+        },
+        components: {},
+        mounted() {
+            store.dispatch("getData");
+        }
+
+    })
+</script>
+
+</html>

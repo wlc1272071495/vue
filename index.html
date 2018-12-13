@@ -261,7 +261,8 @@
         hourHand.style.transform = `rotate(${hours * 30-90 + minutes/60*30 }deg)`;
         minuteHand.style.transform = `rotate(${minutes * 6-90+(seconds/60)*6}deg)`;
         secondHand.style.transform = `rotate(${seconds*6-90+(milliSeconds/1000)*6}deg)`;
-        setTimeout(getTime, 80);
+        requestAnimationFrame(getTime);
+        // setTimeout(getTime, 80);
     }
     // var timer = setInterval(getTime, 10);
 </script>

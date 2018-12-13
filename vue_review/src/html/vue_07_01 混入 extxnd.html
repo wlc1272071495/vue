@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../styles/pikaday.css">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/lodash.js"></script>
+    <!-- <script src="../libs/js/pikaday.js"></script> -->
+    <script src="../libs/js/velocity.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script> -->
+    <style>
+        * {
+            padding: 0;
+            margin: 0
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <com-a></com-a>
+        <todo-item></todo-item>
+    </div>
+</body>
+<script>
+    // 局部注册组件
+    var todoItem = Vue.extend({
+        data: function() {
+            return {
+                todoData: [{
+                    id: 0,
+                    text: '蔬菜'
+                }, {
+                    id: 1,
+                    text: '奶酪'
+                }, {
+                    id: 2,
+                    text: '随便其它什么人吃的东西'
+                }]
+            }
+        },
+        template: `
+        <ul>
+            <li v-for='(d, i) in todoData' :key="i">
+                {{ d.text }}
+            </li>
+        </ul>
+  `
+    });
+
+    // var one = new todoItem();   // 此处直接创建Vue 实例用法 new Component().$mount('#mount-point')
+    // 请注意，在实例化extends组件构造器时，传入属性必须是propsData、而不是props哦
+    // new todoItem({
+    //     el: "#app",
+    //     propsData: {
+    //         todoData: [{
+    //             id: 0,
+    //             text: '蔬菜'
+    //         }, {
+    //             id: 1,
+    //             text: '奶酪'
+    //         }, {
+    //             id: 2,
+    //             text: '随便其它什么人吃的东西'
+    //         }]
+    //     }
+    // })
+
+    Vue.component("comA", todoItem); //局部组件转全局组件
+
+    var vm = new Vue({
+        el: "#app",
+        components: {
+            todoItem
+        }
+    })
+</script>
+
+</html>

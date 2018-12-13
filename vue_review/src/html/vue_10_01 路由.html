@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../styles/pikaday.css">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/vue-router.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0
+        }
+        
+        .active {
+            background: gray;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h2>{{msg}}</h2>
+        <p>
+            <router-link to="/one/wlc">one</router-link>
+            <router-link :to="{name:'two',params:{name:123}}">two</router-link>
+            <router-link :to="{path:'/pageThree'}">three</router-link>
+        </p>
+        <div>
+            <router-view></router-view>
+        </div>
+    </div>
+</body>
+<script>
+    var comA = {
+        data: function() {
+            return {
+                msg: "我是路由A",
+                list: {
+                    name: "comA",
+                    page: "one"
+                }
+            }
+        },
+        template: `
+            <div class="one">
+                <h3>
+                    {{msg}}
+                </h3>
+                <p>{{list.name}}-----------{{list.page}}</p>
+            </div>
+        `
+    }
+    var comB = {
+        data: function() {
+            return {
+                msg: "我是路由B",
+                list: {
+                    name: "comB",
+                    page: "two"
+                }
+            }
+        },
+        template: `
+            <div class="one">
+                <h3>
+                    {{msg}}
+                </h3>
+                <p>{{list.name}}-----------{{list.page}}</p>
+            </div>
+        `
+    }
+    var comC = {
+        data: function() {
+            return {
+                msg: "我是路由C",
+                list: {
+                    name: "comC",
+                    page: "three"
+                }
+            }
+        },
+        template: `
+            <div class="one">
+                <h3>
+                    {{msg}}
+                </h3>
+                <p>{{list.name}}-----------{{list.page}}</p>
+            </div>
+        `
+    }
+
+    var routes = [{
+        path: "/",
+        name: "home",
+        alias: "/home",
+        component: comA
+    }, {
+        path: "/one/:id",
+        name: "one",
+        alias: "/pageOne",
+        component: comA
+    }, {
+        path: "/two",
+        name: "two",
+        alias: "/pageTwo",
+        component: comB
+    }, {
+        path: "/three",
+        name: "three",
+        alias: "/pageThree",
+        component: comC
+    }]
+
+    var router = new VueRouter({
+        routes
+    })
+    Vue.use(VueRouter);
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "Vue 路由"
+        },
+        router,
+        watch: {
+            "$route": function(to, from) {
+                // console.log(from, to)
+                console.log(to)
+            }
+        }
+    })
+</script>
+
+</html>

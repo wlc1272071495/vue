@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../styles/pikaday.css">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/vue-router.js"></script>
+    <script src="../libs/js/vuex.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <h3>{{msg}}</h3>
+        <p>{{name}}----{{age}}----{{hobby}}</p>
+        <p>{{count}}----<button @click="fn">点击</button></p>
+        <p>商品：<select @change="changeSelect">
+            <option v-for="(item,index) in goodsList" :data-index="index" :selected="defaultIndex==index?true:false" :key="item.name" :value="item.goodsId">{{item.goodsName}}</option>
+        </select> </p>
+        <p>展示： <span v-for="(item,index) in goods" :key="index"> {{item}} </span> </p>
+
+
+    </div>
+</body>
+<script>
+    Vue.use(Vuex);
+    var store = new Vuex.Store({
+        state: {
+            count: 0,
+            personProperty: {
+                name: "wlc",
+                age: 18,
+                hobby: "Ani"
+            },
+            goodsList: [],
+            goods: {}
+        },
+        getters: {
+            getGoodsById: state => id => state.goodsList.find(item => item.goodsId == id),
+            search: state => key => state.goodsList.filter(item => item.goodsId.indexOf(key) != -1 || item.goodsName.indexOf(key) != -1 || item.goodsName.indexOf(key) != -1 || item.goodsPrice.indexOf(key) != -1)
+        },
+        mutations: {
+            increase(state) {
+                state.count++;
+                console.log(state.count);
+            },
+            changeName(state) {
+                if (state.personProperty.name == "wlc") {
+                    state.personProperty.name == "www";
+                } else {
+                    state.personProperty.name == "wlc";
+                }
+            },
+            setData(state, payload) { //payload  载荷  为接收数据
+                console.log(payload);
+                state.goodsList = payload.data;
+            },
+            setGoods(state, payload) {
+                state.goods = state.goodsList[payload];
+                console.log(payload, state.goodsList)
+            }
+        },
+        actions: {
+            async getData({
+                commit
+            }) {
+                return new Promise((resolve, reject) => {
+                    var req = new XMLHttpRequest();
+                    req.open("get", "../libs/data/goods.json", true);
+                    req.send();
+                    req.onload = function() {
+                        var data = JSON.parse(req.responseText);
+                        resolve(data)
+
+                        commit("setData", {
+                            data
+                        })
+                    }
+                })
+            },
+            async allData({
+                dispatch,
+                commit
+            }, payload) {
+                await dispatch("getData").then((res) => {
+                    // console.log(res)
+                    commit("setGoods", payload)
+                });
+            }
+        }
+    })
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vuex review",
+            defaultIndex: 3,
+        },
+        store,
+        methods: {
+            fn() {
+                store.commit("increase");
+            },
+            changeSelect(el) {
+                var id = el.currentTarget.value;
+                this.defaultIndex = this.goodsList.findIndex(item => item.goodsId == id);
+                // console.log(this.getGoodsById(el.target.value));
+                // store.state.goods = this.getGoodsById(el.target.value);
+                this.setGoods(this.defaultIndex);
+            },
+            ...Vuex.mapMutations({
+                add: "increase",
+                named: "changeName",
+                setGoods: "setGoods"
+            }),
+            ...Vuex.mapActions({
+                getData: "getData"
+            })
+        },
+        computed: {
+            count() {
+                return store.state.count;
+            },
+            ...Vuex.mapState({
+                myCount: "count",
+                name: (state) => state.personProperty.name,
+                age: (state) => state.personProperty.age,
+                hobby: (state) => state.personProperty.hobby,
+                personProperty: "personProperty",
+                goodsList: "goodsList",
+                goods: "goods"
+            }),
+            ...Vuex.mapGetters({
+                search: "search",
+                getGoodsById: "getGoodsById"
+            })
+        },
+        beforeMount() {
+            store.dispatch("allData", this.defaultIndex);
+        }
+    })
+</script>
+
+</html>

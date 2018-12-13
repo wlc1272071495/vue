@@ -1,0 +1,57 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../styles/pikaday.css">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/lodash.js"></script>
+    <!-- <script src="../libs/js/pikaday.js"></script> -->
+    <script src="../libs/js/velocity.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script> -->
+    <style>
+        * {
+            padding: 0;
+            margin: 0
+        }
+    </style>
+</head>
+
+<body>
+    <!-- id="test"  -->
+    <div id="app">
+        <p>{{msg}}</p>
+        <anchored-heading :level="1">
+            我是level1
+        </anchored-heading>
+    </div>
+</body>
+<script>
+    // 你可以通过 this.$slots 访问静态插槽的内容，得到的是一个 VNodes 数组：
+    Vue.component("anchored-heading", {
+        props: ["level"],
+        render(createElement) {
+            console.log(this.$slots.default) //向组件中传递不带 slot 特性的子元素时，比如 anchored-heading 中的 Hello world!，这些子元素被存储在组件实例中的 $slots.default 中。
+            return createElement("h" + this.level, this.$slots.default);
+        }
+    })
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "vue_09_01 渲染函数.html",
+        },
+        methods: {
+
+        }
+
+    })
+</script>
+
+</html>
