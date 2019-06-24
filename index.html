@@ -14,7 +14,7 @@
             left: 0;
             right: 0;
         }
-        
+
         .wrapBox {
             width: 300px;
             height: 300px;
@@ -22,7 +22,7 @@
             /* background: #009a61; */
             color: #009a96;
         }
-        
+
         .wrapBox::before,
         .wrapBox::after {
             content: '';
@@ -32,17 +32,17 @@
             animation: clipMe 8s linear infinite;
             transition: clip 0.3s;
         }
-        
+
         .wrapBox::before {
             animation-delay: -4s;
             /*负值，请注意动画跳过 2 秒进入动画周期：*/
         }
-        
+
         * {
             padding: 0;
             margin: 0;
         }
-        
+
         .clockBox {
             width: 300px;
             height: 300px;
@@ -51,7 +51,7 @@
             background: #c6ffff;
             box-shadow: 2px 2px 2px 2px gray;
         }
-        
+
         .dotBox {
             width: 250px;
             height: 250px;
@@ -61,17 +61,17 @@
             position: relative;
             background: #fff;
         }
-        
+
         .dotBox * {
             position: absolute;
         }
-        
+
         .dotBig {
             width: 3px;
             height: 10px;
             background: #000;
         }
-        
+
         .dotBig span {
             /* content: attr(data-attr); */
             width: 20px;
@@ -85,20 +85,20 @@
             line-height: 20px;
             /* transform: rotate(-attr(data-rotate)) */
         }
-        
+
         .dotSmall {
             width: 3px;
             height: 4px;
             background: #000;
         }
-        
+
         .hourHand,
         .minuteHand,
         .secondHand {
             transform-origin: 10px center;
             z-index: 10;
         }
-        
+
         .hourHand {
             width: 60px;
             height: 5px;
@@ -106,7 +106,7 @@
             background: #335ff2;
             border-radius: 5px 0 0 5px;
         }
-        
+
         .hourHand:before {
             content: "";
             display: block;
@@ -117,7 +117,7 @@
             border-left-width: 18px;
             border-left-color: #335ff2;
         }
-        
+
         .minuteHand {
             width: 80px;
             height: 5px;
@@ -125,7 +125,7 @@
             background: #fac72c;
             border-radius: 3px 0 0 3px;
         }
-        
+
         .minuteHand::before {
             content: "";
             display: block;
@@ -136,7 +136,7 @@
             border-left-width: 15px;
             border-left-color: #fac72c;
         }
-        
+
         .secondHand {
             width: 100px;
             height: 4px;
@@ -144,7 +144,7 @@
             background: #e93d68;
             border-radius: 2px 0 0 2px;
         }
-        
+
         .secondHand::before {
             content: "";
             display: block;
@@ -155,7 +155,7 @@
             border-left-width: 12px;
             border-left-color: #e93d68;
         }
-        
+
         .dot {
             width: 10px;
             height: 10px;
@@ -169,24 +169,28 @@
             z-index: 100;
             transform: scale(0.8);
         }
-        
+
         @-webkit-keyframes clipMe {
+
             0%,
             100% {
                 clip: rect(0px, 330px, 3px, 0px);
                 /*设置元素的形状。唯一合法的形状值是：rect (top, right, bottom, left)*/
             }
+
             25% {
                 clip: rect(0px, 3px, 330px, 0px);
             }
+
             50% {
                 clip: rect(327px, 330px, 330px, 0px);
             }
+
             75% {
                 clip: rect(0px, 330px, 330px, 327px);
             }
         }
-        
+
         .bg {
             width: 100%;
             position: fixed;
@@ -241,7 +245,7 @@
         }
         dotBox.appendChild(div);
         // div.style.transformOrigin = "center center";
-        div.style.transform = `rotate(${i * 6}deg) scale(0.8) translateY(${div.offsetHeight/2}px)`;
+        div.style.transform = `rotate(${i * 6}deg) scale(0.8) translateY(${div.offsetHeight / 2}px)`;
         // div.style.transform = `rotate(${i * 6}deg) translateY(0px)`;
         // div.style.transform = `rotate(${i * 6}deg) translateY(5px)`;
 
@@ -258,9 +262,9 @@
         var seconds = date.getSeconds();
         var milliSeconds = date.getMilliseconds();
 
-        hourHand.style.transform = `rotate(${hours * 30-90 + minutes/60*30 }deg)`;
-        minuteHand.style.transform = `rotate(${minutes * 6-90+(seconds/60)*6}deg)`;
-        secondHand.style.transform = `rotate(${seconds*6-90+(milliSeconds/1000)*6}deg)`;
+        hourHand.style.transform = `rotate(${hours * 30 - 90 + minutes / 60 * 30}deg)`;
+        minuteHand.style.transform = `rotate(${minutes * 6 - 90 + (seconds / 60) * 6}deg)`;
+        secondHand.style.transform = `rotate(${seconds * 6 - 90 + (milliSeconds / 1000) * 6}deg)`;
         requestAnimationFrame(getTime);
         // setTimeout(getTime, 80);
     }
