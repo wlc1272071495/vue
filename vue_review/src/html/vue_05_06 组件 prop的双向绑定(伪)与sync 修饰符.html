@@ -17,6 +17,7 @@
         <h2>{{msg}}</h2>
         <span>input：{{text}}</span>
         <my-com class="myCom" v-bind:text="text" @update:text="text=$event"></my-com>
+			<!-- 为了方便起见，我们为这种模式提供一个缩写，即 .sync 修饰符： -->
         <sync-com :text.sync="text"></sync-com>
     </div>
 </body>
@@ -34,6 +35,8 @@
     // 然后父组件可以监听那个事件并根据需要更新一个本地的数据属性。
     //  <my-com class="myCom" v-bind: text="text" @update: text = "text=$event" ></my - com >
 
+	<!-- 为了方便起见，我们为这种模式提供一个缩写，即 .sync 修饰符： -->
+	 // <my-com class="myCom" v-bind: text="text" :text.sync = "text=$event" ></my - com >
     var myCom = {
         props: {
             text: {
@@ -58,6 +61,7 @@
             }
         }
     }
+	
 
     var syncCom = {
         props: {
